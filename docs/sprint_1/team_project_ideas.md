@@ -2,7 +2,7 @@
 
 Update this with 1-2 ideas per team member for what your teams app project.
 
-To set this up add each teammates name in the `teammate name` column. Everyone
+To set this up add each teammates name in the `teammate name` column. Everyone.
 on the team should then updated it, adding 1-2 ideas along with a short 
 description. Keep in mind that the descriptions should be only 1-3 short
 sentences. 
