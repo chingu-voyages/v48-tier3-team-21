@@ -17,4 +17,4 @@ you like the best.
 |     | - Create Local Developement Branch                                      | X         | X          | X            |               |               |               |
 |     | - Create Local Branch For each feature                                  | X         | X          | X            |               |               |               |
 | 3   | Plan another meeting (mid week meeting) |           |            |              |               |               |               |
-|     | - To continue on discussing Github workflow                             |X           |X            |              |               |               |               |
+|     | - To continue on discussing Github workflow                             |X           |X            |X             |               |               |               |
