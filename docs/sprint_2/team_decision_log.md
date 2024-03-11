@@ -8,15 +8,14 @@ To set this up add each teammates name in the `teammate name` column. Each
 team member should Place an 'X' under their name to vote for the ideas 
 you like the best.
 
-| No. | Question/Option | Teammate name | Teammate name | Teammate name | Teammate name | Teammate name | Teammate name |
+| No. | Question/Option | Jack Weru | Arman Jena | Shivam Yadav | Teammate name | Teammate name | Teammate name |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 1 | Team meeting schedule | | | | | | |
-|   |	- Sprint Planning Sunday@9:00 a.m. CST | | | | | | |
-|   |	- Knowledge Xfer as needed | | | | | | |
-|   |	- Working Session Thursday@4:00 p.m. CST | | | | | | |
-| 2	| Project Backlog Tool | | | | | | |
-|   |	- Notion | | | | | | |
-|   |	- Jira | | | | | | |
+| 1 | Create New Next.js Project | | | | | | |
+|   |	- Push to github | | | | | | |
+|   |	- Create Remote Development Branch | | | | | | |
+| 2	| Local Git Setup | | | | | | |
+|   |	- Create Local Developement Branch | | | | | | |
+|   |	- Create Local Branch For each feature | | | | | | |
 | 3	| Technical Stack (vote by adding your pref. in the cell under your name) | | | | | | |
 |   |	- BE Language | | | | | | |
 |   |	- FE Language | | | | | | |
