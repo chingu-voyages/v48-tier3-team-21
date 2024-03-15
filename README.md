@@ -34,7 +34,7 @@ Everyone on your team should add their name along with a link to their GitHub
 your repo access and to practice PR'ing with your team _before_ you start
 coding!
 
-- Jack Weru Kioni #1: [GitHub](https://github.com/Jaweki) / [LinkedIn](https://linkedin.com/in/ljaweki-dekut)
+- Jack Weru #1: [GitHub](https://github.com/Jaweki) / [LinkedIn](https://linkedin.com/in/ljaweki-dekut)
 - Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
 
   ...
