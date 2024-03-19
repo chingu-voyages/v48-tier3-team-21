@@ -1,4 +1,5 @@
 import HeroSection from "./HeroSection";
+import DinoWorldMap from "./DinoWorldMap";
 
 const LandingPage = () => {
   return (
@@ -7,6 +8,7 @@ const LandingPage = () => {
       <HeroSection />
 
       {/* map overview section */}
+      <DinoWorldMap />
 
       {/* footer section */}
     </div>
