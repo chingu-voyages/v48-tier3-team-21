@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import dinoHeroImage from "@/public/landing-page/dinosaur-background-image.jpg";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -25,12 +26,18 @@ const HeroSection = () => {
           </span>
 
           <div className="flex flex-row gap-2">
-            <Button size={"sm"} className="text-sm bg-orange-300">
-              Maps & Chats
-            </Button>
-            <Button size={"sm"} className="text-sm bg-orange-300">
-              Data Table
-            </Button>
+            <Link
+              href={"/explore-dino"}
+              className=" p-2 py-4 rounded-lg text-sm bg-orange-300"
+            >
+              Search on Map
+            </Link>
+            <Link
+              href={"/chats-table"}
+              className="p-2 py-4 text-sm rounded-lg bg-orange-300"
+            >
+              Chats & Data Table
+            </Link>
           </div>
         </div>
       </div>

@@ -8,8 +8,8 @@ const Map = ReactMapboxGL({
 
 const DinoWorldMap = () => {
   return (
-    <section className="w-full h-screen px-20 pt-10 flex flex-col gap-3">
-      <h2 className="text-4xl font-bold">
+    <section className="w-full h-full md:px-20  max-md:px-7 md:pt-10 flex flex-col gap-3">
+      <h2 className="text-4xl max-sm:text-2xl font-bold">
         Explore Our Discovered Dino Digging Sites.
       </h2>
       <Map
@@ -18,8 +18,12 @@ const DinoWorldMap = () => {
           height: "100%",
           width: "100%",
         }}
+        zoom={[2]}
+        center={[-100.994031, 43.719235]}
       >
-        {/* To add more layers */}
+        {/* <Layer type="symbol" id="marker" layout={{ "icon-image": "marker-15" }}>
+          <Feature coordinates={[-0.481747846041145, 51.3233379650232]} />
+        </Layer> */}
       </Map>
     </section>
   );
