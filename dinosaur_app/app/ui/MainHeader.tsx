@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 export const NavLinks = () => {
   return (
-    <div className="w-full  flex max-sm:flex-col sm:flex-row items-center gap-2 text-sm font-bold">
-      <Link href={"/home"}>Home</Link>
-      <Link href={"/dino-digging"}>Go Digging</Link>
-      <Link href={"/about-us"}>About Us</Link>
-      <Link href={"/dino-data"}>Data</Link>
+    <div className="w-full flex max-sm:flex-col sm:flex-row items-center max-sm:items-end gap-2 text-sm font-bold">
+      <Link href={"/"}>Home</Link>
+      <Link href={"/explore-dino"}>Go Digging</Link>
+      <Link href={"/extras/about-us"}>About Us</Link>
+      <Link href={"/chats-table"}>Data</Link>
     </div>
   );
 };
@@ -23,7 +23,7 @@ const MainHeader = () => {
   }, []);
 
   return (
-    <nav className="flex flex-row items-center justify-between px-2 p-1 ">
+    <nav className="flex flex-row items-center justify-between px-2 pr-5 p-1 ">
       <Link href={"/"} className=" font-cabinSketch ">
         Digging Into Dinosaurs
       </Link>

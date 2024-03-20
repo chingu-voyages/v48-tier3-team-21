@@ -16,7 +16,7 @@ const MobileNavigation = () => {
             <div className="w-full h-1 bg-black rounded-full" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[30vw] rounded-md bg-orange-300 text-white font-bold z-50 p-3 shadow-lg mr-5 mt-2">
+        <DropdownMenuContent className="w-[200px] rounded-md bg-orange-300 text-white font-bold z-50 p-3 shadow-lg mr-5 mt-2">
           <NavLinks />
         </DropdownMenuContent>
       </DropdownMenu>
