@@ -30,3 +30,5 @@ export const developers = [
       role: "scrum master",
     },
 ];
+
+export const dinoDescription="Dinosaurs, awe-inspiring giants from Earth's distant past, captivate with their colossal presence. These ancient reptiles roamed diverse ecosystems for millions of years, ranging from the towering sauropods to the swift and cunning velociraptors. Their fossilized remains unveil a world of remarkable biodiversity, revealing creatures adapted for various lifestyles, from herbivores peacefully grazing to ferocious predators hunting their prey. With their iconic appearances and mysterious extinction, dinosaurs continue to intrigue and inspire curiosity, offering glimpses into a bygone era that continues to fascinate scientists and enthusiasts alike"
