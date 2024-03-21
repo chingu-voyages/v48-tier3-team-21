@@ -36,8 +36,8 @@ const Dinocard = ({
         <Image
           src={imageSrc === "N/A" ? dinoHeroImage : imageSrc}
           alt={name}
-          width={200}
-          height={400}
+          width={1376}
+          height={768}
           className="w-[380px] h-[100px]"
         />
         <div className="flex justify-between items-center py-2">
