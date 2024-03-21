@@ -1,24 +1,6 @@
 'use server';
 
-// Converts a Dino found-in location into a geoJSON coordinate compatible with mapbox
-export const convertDinoLocation = async (locationName: string) => {
-    try {
-        const accessToken = process.env.MAPBOX_ACCESS_TOKEN;
-        const geocodingAPI = `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationName}.json?access_token=${accessToken}`;
-        const response = await fetch(geocodingAPI);
-        const data = await response.json();
-        
-        if (data.features.length > 0) {
-            const coordinates = data.features[0].geometry.coordinates;
-            return coordinates;
-        } else {
-            return null; // Handle location not found
-        }   
-    } catch (error) {
-        console.log("Failed to convert location to geo Coordinates");
-        return null
-    }  
-}
+import { ConvertedLocations, DinoDataType, geoLocation } from "./definitions";
 
 const getPastDate = (pastDays: number) => {
     const currentDate = new Date();
@@ -56,4 +38,78 @@ export const fetchLatestNews = async () => {
         console.log("Attempt to fetch news failed: ", error);
         return null;
     }
+}
+
+
+// Converts a Dino found-in location into a geoJSON coordinate compatible with mapbox
+export const convertDinoLocations = async (locations: string): Promise<geoLocation[]> => {
+    try {
+        const accessToken = process.env.MAPBOX_ACCESS_TOKEN;
+        const locationsArray = locations.split(',').map(loc => loc.trim());
+        const coordinatesPromises = locationsArray.map(async location => {
+            const geocodingAPI = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${accessToken}`;
+            const response = await fetch(geocodingAPI);
+            const data = await response.json();
+            if (data.features.length > 0) {
+                const coordinates = data.features[0].geometry.coordinates;
+                return { [location]: coordinates}
+            } else {
+                return {[location]: []}; // Handle location not found
+            }
+        });
+        const geoLocations = await Promise.all(coordinatesPromises);
+        return geoLocations
+    } catch (error) {
+        console.log("Failed to convert location to geo Coordinates");
+        return [];
+    }
+}
+
+export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
+    try {
+        const url = "https://chinguapi.onrender.com/dinosaurs";
+        const response = await fetch(url);
+        if (response.status === 200) {
+            const data = await response.json();
+            const processedData: DinoDataType[] = [];
+            for (const element of data) {
+                const locations = element.foundIn;
+                const geoLocations = await convertDinoLocations(locations);
+                processedData.push({ ...element, geoLocations });
+            }
+            // console.log(processedData);
+            return processedData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.log("Failed to fetch dino data: ", error);
+        return null;
+    }
+}
+
+export const getDigSites = async () => {
+    const dinoData = await fetchDinoData();
+    const dataGroupedByLocation = new Map();
+    dinoData?.forEach(dino => {
+        dino.geoLocations?.forEach((location: geoLocation[]) => {
+            const locName: string = Object.keys(location)[0];
+            const digSite = dataGroupedByLocation.get(locName);
+            if (digSite) {
+                digSite.count++;
+            } else {
+                const coordinates = JSON.stringify(Object.values(location)[0])
+                dataGroupedByLocation.set(locName, {
+                    coordinates,
+                    count: 1
+                });
+            }
+        });
+    });
+
+    const locationNestedObj = Array.from(dataGroupedByLocation.entries()).map(([country, data]) => ({ 
+        [country]: data 
+    }));
+    // console.log(locationNestedObj);
+    return locationNestedObj as ConvertedLocations[]
 }
