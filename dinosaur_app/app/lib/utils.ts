@@ -20,15 +20,27 @@ export const convertDinoLocation = async (locationName: string) => {
     }  
 }
 
+const getPastDate = (pastDays: number) => {
+    const currentDate = new Date();
+    const pastDate = new Date(currentDate.getTime() - (pastDays * 24 * 60 * 60 * 1000));
+
+    const year = pastDate.getFullYear();
+    const month = `${(pastDate.getMonth() - 1)}`.padStart(2, '0');
+    const day = `${pastDate.getDate()}`.padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 // fetch latest news from news api
 export const fetchLatestNews = async () => {
     try {
         const newsApiKey = process.env.NEWS_API_KEY
-        const url = `${process.env.NEWS_API_URL}${newsApiKey}`;
+        const fromDate = getPastDate(29)
+        const url = `https://newsapi.org/v2/everything?q=Dinosaur&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}`;
         const response = await fetch(url);
 
         if (response.status === 200) {
-            const data = await response.json() as any;
+            const data = await response.json();
 
             // return the first ten news articles
             

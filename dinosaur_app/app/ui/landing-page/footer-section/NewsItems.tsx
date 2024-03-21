@@ -7,7 +7,7 @@ const NewsItems = async () => {
 
   return (
     <div className=" w-full flex flex-row gap-5 overflow-hidden hover:overflow-x-auto sm:px-5">
-      {availableNews.map((news: any) => (
+      {availableNews?.map((news: any) => (
         <div
           key={news.urlToImage}
           className="w-[300px] max-sm:w-[200px] h-[200px] max-sm:h-[150px] rounded-md bg-white shrink-0 z-0 relative hover:border border-orange-400"
