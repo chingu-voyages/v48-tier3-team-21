@@ -1,30 +1,42 @@
 "use client";
-import ReactMapboxGL, { Layer, Feature } from "react-mapbox-gl";
+import ReactMapboxGL from "react-mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { ConvertedLocations, DinoDataType } from "@/app/lib/definitions";
 
-const Map = ReactMapboxGL({
-  accessToken: process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? "",
-});
+const DinoWorldMap = ({
+  dinoData,
+  digSites,
+}: {
+  dinoData: DinoDataType[];
+  digSites: ConvertedLocations[];
+}) => {
+  const MapLayout = ReactMapboxGL({
+    accessToken: process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? "",
+  });
 
-const DinoWorldMap = () => {
   return (
     <section className="w-full h-full md:px-20  max-md:px-7 md:pt-10 flex flex-col gap-3">
       <h2 className="text-4xl max-sm:text-2xl font-bold">
         Explore Our Discovered Dino Digging Sites.
       </h2>
-      <Map
+      <MapLayout
         style={"mapbox://styles/jaweki/cltyhsap500e701mj2ex388vh"}
         containerStyle={{
           height: "100%",
           width: "100%",
         }}
-        zoom={[2]}
-        center={[-100.994031, 43.719235]}
+        zoom={[1]}
+        center={[-30, 0]}
       >
-        {/* <Layer type="symbol" id="marker" layout={{ "icon-image": "marker-15" }}>
-          <Feature coordinates={[-0.481747846041145, 51.3233379650232]} />
-        </Layer> */}
-      </Map>
+        {/* <ZoomControl />
+        <Marker coordinates={[23.9137106762068, -28.3782721906973]}>
+          <img
+            src={markerUrl}
+            alt="Dino Marker"
+            style={{ width: 25, height: 25 }}
+          />
+        </Marker> */}
+      </MapLayout>
     </section>
   );
 };
