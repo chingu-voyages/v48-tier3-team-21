@@ -19,7 +19,7 @@ const Marker = ({
   relativeData: DinoDataType;
 }) => {
   return (
-    <DropdownMenu className={" w-[250px] bg-white p-3 "}>
+    <DropdownMenu>
       <DropdownMenuTrigger>
         <button className=" bg-orange-500 bg-opacity-50 font-semibold rounded-full flex items-center justify-center p-[1px] border border-orange-600">
           <span className=" w-8 h-8 rounded-full bg-orange-400 border border-orange-600 text-center flex items-center justify-center">
@@ -30,15 +30,13 @@ const Marker = ({
 
       <DropdownMenuContent className={"w-[300px]  border border-black"}>
         <div className="w-full flex flex-col items-center border-4 border-orange-300 rounded-xl">
-          <DropdownMenuItem className={"w-[250px]"}>
-            <Image
-              src={relativeData.imageSrc}
-              alt={`click to read more on Dinosaurs dicovered in ${foundIn}`}
-              width={1376}
-              height={768}
-              className="w-auto h-[150px]"
-            />
-          </DropdownMenuItem>
+          <Image
+            src={relativeData.imageSrc}
+            alt={`click to read more on Dinosaurs dicovered in ${foundIn}`}
+            width={1376}
+            height={768}
+            className="w-auto h-[150px]"
+          />
           <DropdownMenuSeparator />
 
           <div className="w-full bg-black text-white flex flex-col items-center p-2 gap-4 rounded-lg rounded-t-none">
