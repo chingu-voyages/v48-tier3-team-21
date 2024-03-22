@@ -20,7 +20,7 @@ export type DinoDataType = {
 };
 
 export type DigSiteType = {
-    coordinates: number[];
+    coordinates: [number, number];
     count: number;
 }
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "mapbox-gl/dist/mapbox-gl.css";
 import "./ui/globals.css";
 import MainHeader from "./ui/MainHeader";
 

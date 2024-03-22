@@ -1,5 +1,6 @@
 "use server";
 
+import { unstable_noStore } from "next/cache";
 import { ConvertedLocations, DinoDataType, geoLocation } from "./definitions";
 
 const getPastDate = (pastDays: number) => {
@@ -17,30 +18,58 @@ const getPastDate = (pastDays: number) => {
 
 // fetch latest news from news api
 export const fetchLatestNews = async () => {
+  unstable_noStore();
   try {
     const newsApiKey = process.env.NEWS_API_KEY;
-    const fromDate = getPastDate(29);
-    const url = `https://newsapi.org/v2/everything?q=Dinosaur&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}`;
-    const response = await fetch(url);
+    const fromDate = getPastDate(29); // Assuming getPastDate function provides past date
 
-    if (response.status === 200) {
-      const data = await response.json();
+    const topics = [ "cretaceous dinosaur", "dinosaur digging", "Jurassic dinosaur", "Triassic era dinosaur", "dinosaur fossils", "discovered dinosaur fossil"];
 
-      // return the first ten news articles
+    // Make promises for each topic
+    const newsPromises = topics.map(async (topic) => {
+      const url = `https://newsapi.org/v2/everything?q=${topic}&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}`;
+      const response = await fetch(url);
 
-      const importantArticles = data.articles.filter(
-        (item: any) => item.urlToImage !== null
-      );
+      if (response.status === 200) {
+        const data = await response.json();
+        return data.articles; // Return all articles for now
+      } else {
+        return []; // Return empty array if request fails
+      }
+    });
 
-      return importantArticles.slice(0, 10);
-    } else {
-      return null;
+    // Wait for all promises to resolve or reject
+    const allNewsData = await Promise.all(newsPromises);
+
+    // Combine articles from all topics
+    const combinedArticles = allNewsData.flat();
+
+    // Filter articles with unique urlToImage & exclude "dinosaur" in title (stricter check)
+    const uniqueArticles = [];
+    const uniqueArticlesUrls = new Set();
+    for (const article of combinedArticles) {// Check for valid title and exclude articles that don't contain "dinosaur" (case-insensitive)
+      if (article.title && !article.title.trim().toLowerCase().includes("dinosaur")) {      
+        // Check if urlToImage starts with https://
+        if (article.urlToImage && article.urlToImage.startsWith("https://")) {
+          uniqueArticlesUrls.add(article.title?.toLowerCase()); // Add title for uniqueness
+          uniqueArticles.push(article);
+          // Limit to 30 unique articles
+          if (uniqueArticles.length === 30) {
+            break;
+          }
+        }
+      }
     }
+
+    return uniqueArticles;
   } catch (error) {
     console.log("Attempt to fetch news failed: ", error);
-    return null;
+    return []; // Return empty array on error
   }
 };
+
+
+
 
 // Converts a Dino found-in location into a geoJSON coordinate compatible with mapbox
 export const convertDinoLocations = async (
@@ -101,7 +130,7 @@ export const getDigSites = async () => {
       if (digSite) {
         digSite.count++;
       } else {
-        const coordinates = JSON.stringify(Object.values(location)[0]);
+        const coordinates = Object.values(location)[0];
         dataGroupedByLocation.set(locName, {
           coordinates,
           count: 1,

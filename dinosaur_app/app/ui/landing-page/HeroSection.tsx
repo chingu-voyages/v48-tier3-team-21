@@ -27,10 +27,10 @@ const HeroSection = () => {
 
           <div className="flex flex-row gap-2">
             <Link
-              href={"/explore-dino"}
+              href={"/#dino_dig_site_map"}
               className=" p-2 py-4 rounded-lg text-sm bg-orange-300"
             >
-              Search on Map
+              Explore on Maps
             </Link>
             <Link
               href={"/chats-table"}
@@ -50,13 +50,18 @@ const HeroSection = () => {
         the extinction likely was a double or triple whammy involving an
         asteroid impact, chocking chemicals from erupting volcanoes, climate
         change and possibly other factors. Utilizing data from public sources
-        like Kaggle & Tableau, we&apos;ve created an interactive website for
-        allthe fun facts we found in the data about dinosaurs! See where and
-        when they lived, what they ate, and individual dinosaur facts! When
-        you&apos;re done, be sure and visit this <a href="https://">link</a>{" "}
-        from the <strong>American Museum of Natural History</strong> for more
-        fun dinosaur facts or this <a href="https://">link</a> to visit the
-        Natural History Museum&spos;s Dino Directory!!
+        like Kaggle & Tableau, we&apos;ve created an interactive website for all
+        the fun facts we found in the data about dinosaurs! See where and when
+        they lived, what they ate, and individual dinosaur facts! When
+        you&apos;re done, be sure to visit{" "}
+        <a href="https://www.amnh.org/" target="_blank">
+          <strong>American Museum of Natural History</strong>
+        </a>{" "}
+        for more fun dinosaur facts and{" "}
+        <a href="https://www.nhm.ac.uk/" target="_blank">
+          <strong>Natural History Museum&apos;s</strong>
+        </a>{" "}
+        Dino Directory to explore a more detailed dinosaur discover colletion!!
       </p>
     </section>
   );
