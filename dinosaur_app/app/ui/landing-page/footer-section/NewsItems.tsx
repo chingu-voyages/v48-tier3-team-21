@@ -1,6 +1,7 @@
 import { fetchLatestNews } from "@/app/lib/utils";
 import { Link2Icon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const NewsItems = async () => {
   const availableNews = await fetchLatestNews();
@@ -18,13 +19,12 @@ const NewsItems = async () => {
             fill
             className=" absolute inset-0 z-10 rounded-md"
           />
-          <a
-            href={news.url}
-            target="_blank"
+          <Link
+            href={`/dino-news/${news.publishedAt}`}
             className="absolute top-3 right-2 z-30 flex text-white rounded-md gap-2 items-center bg-black bg-opacity-80 p-2 hover:scale-105 hover:bg-opacity-100 transition-all duration-500 ease-linear"
           >
             view <Link2Icon />
-          </a>
+          </Link>
           <p className="absolute bg-gradient-to-b from-transparent via-transparent to-black w-full h-full z-20 flex flex-col justify-end p-3 ">
             <span className="text-white max-md:text-orange-400 font-semibold w-full h-20 overflow-hidden text-ellipsis md:hover:text-orange-400 transition-colors duration-300 ease-in">
               {news.title}
