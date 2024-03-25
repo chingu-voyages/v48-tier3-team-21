@@ -1,6 +1,5 @@
 import HeroSection from "./HeroSection";
 import DinoWorldMap from "./DinoWorldMap";
-import FooterSection from "./footer-section/FooterSection";
 import { MoveRightIcon } from "lucide-react";
 import Link from "next/link";
 import { fetchDinoData, getDigSites } from "@/app/lib/utils";
@@ -39,9 +38,6 @@ const LandingPage = async () => {
           Explore Dinos <MoveRightIcon className="text-white" />
         </Link>
       </div>
-
-      {/* footer section */}
-      <FooterSection />
     </div>
   );
 };

@@ -18,7 +18,6 @@ const getPastDate = (pastDays: number) => {
 
 // fetch latest news from news api
 export const fetchLatestNews = async () => {
-  unstable_noStore();
   try {
     const newsApiKey = process.env.NEWS_API_KEY;
     const fromDate = getPastDate(29); // Assuming getPastDate function provides past date
@@ -45,7 +44,7 @@ export const fetchLatestNews = async () => {
     const combinedArticles = allNewsData.flat();
 
     // Filter articles with unique urlToImage & exclude "dinosaur" in title (stricter check)
-    const uniqueArticles = [];
+    const uniqueArticles: any = [];
     const uniqueArticlesUrls = new Set();
     for (const article of combinedArticles) {// Check for valid title and exclude articles that don't contain "dinosaur" (case-insensitive)
       if (article.title && !article.title.trim().toLowerCase().includes("dinosaur")) {      
@@ -55,11 +54,13 @@ export const fetchLatestNews = async () => {
           uniqueArticles.push(article);
           // Limit to 30 unique articles
           if (uniqueArticles.length === 30) {
+             
             break;
           }
         }
       }
     }
+
 
     return uniqueArticles;
   } catch (error) {
@@ -109,8 +110,8 @@ export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
         const geoLocations = await convertDinoLocations(locations);
         processedData.push({ ...element, geoLocations });
       }
-      // console.log(processedData);
-      return processedData;
+      
+      return processedData
     } else {
       return null;
     }
