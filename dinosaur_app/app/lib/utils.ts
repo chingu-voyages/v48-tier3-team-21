@@ -154,3 +154,19 @@ export const getDinoById = async (id: number): Promise<DinoDataType | undefined>
     const dinoData: DinoDataType[] = await resp.json();
     return dinoData?.find((dino) => dino.id === Number(id));
 };
+
+
+export async function formatDate(dateString: any) {
+  const options: any = {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    hour12: true
+  };
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', options); // Replace '/' with ', '
+}
