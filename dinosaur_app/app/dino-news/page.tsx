@@ -2,12 +2,13 @@ import Link from "next/link";
 import { fetchLatestNews, formatDate } from "../lib/utils";
 import Image from "next/image";
 import { Suspense } from "react";
+import PageLoading from "../ui/PageLoading";
 
 const DinoNewsPage = async () => {
   const dinoNews = await fetchLatestNews();
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<PageLoading />}>
       <main className="w-full bg-white p-20 max-md:p-8 flex flex-col gap-5">
         <h1 className=" text-8xl max-md:text-3xl max-lg:text-5xl font-bold">
           Dig Up the Latest! Dinosaur News and Information
