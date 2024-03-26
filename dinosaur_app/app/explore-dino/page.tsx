@@ -7,7 +7,7 @@ import Dinocard from "./ui/Dinocard";
 import { getAllDinousars } from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
-import Loading from "./ui/Loading";
+import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
 import { filterCountries } from "../lib/constants";
 
@@ -34,13 +34,17 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name,foundIn]);
+  }, [name, foundIn]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
       <div className="flex gap-x-4">
         <SearchBar />
-        <Filter placeholder="Countries" filterOptions={filterCountries} paramValue="foundIn" />
+        <Filter
+          placeholder="Countries"
+          filterOptions={filterCountries}
+          paramValue="foundIn"
+        />
       </div>
       <div
         className={

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 import BackButton from "../ui/BackButton";
 import clsx from "clsx";
+import PageLoading from "@/app/ui/PageLoading";
 
 interface DinoNewsProp {
   params: {
@@ -25,7 +26,7 @@ const Page = async ({ params }: Readonly<DinoNewsProp>) => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<PageLoading />}>
       <main className="w-3/4 p-20 max-md:p-8 flex flex-col gap-5 bg-white text-black">
         <BackButton />
         <div className=" w-full flex flex-row max-md:flex-col md:items-center md:justify-between">
