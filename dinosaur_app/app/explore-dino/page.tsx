@@ -3,23 +3,29 @@
 import React, { useEffect, useState } from "react";
 import { DinoDataType } from "../lib/definitions";
 import Dinocard from "./ui/Dinocard";
-import { useSearchParams, usePathname } from "next/navigation";
+
 import { getAllDinousars } from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
 import Loading from "./ui/Loading";
+import Filter from "./ui/Filter";
+import { filterCountries } from "../lib/constants";
 
-const ExploreDino = () => {
+const ExploreDino = ({
+  searchParams,
+}: {
+  searchParams?: { name: string; foundIn: string };
+}) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
   const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const name = searchParams?.name || "";
+  const foundIn = searchParams?.foundIn || "";
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
       setLoading(true);
       try {
-        const dinausors = await getAllDinousars();
+        const dinausors = await getAllDinousars({ name, foundIn });
         setDinousars(dinausors);
       } catch (error) {
         console.log("Failed to fetch dinausors: ", error);
@@ -28,11 +34,14 @@ const ExploreDino = () => {
       }
     };
     fetchDinosaurs();
-  }, []);
+  }, [name,foundIn]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
-      <SearchBar />
+      <div className="flex gap-x-4">
+        <SearchBar />
+        <Filter placeholder="Countries" filterOptions={filterCountries} paramValue="foundIn" />
+      </div>
       <div
         className={
           loading
@@ -42,6 +51,10 @@ const ExploreDino = () => {
       >
         {loading ? (
           <Loading />
+        ) : name.length > 0 && dinausors.length === 0 ? (
+          <div className="text-3xl font-bold text-orange-600 text-center">
+            No Dinosours found
+          </div>
         ) : (
           dinausors?.map((dino) => {
             return (

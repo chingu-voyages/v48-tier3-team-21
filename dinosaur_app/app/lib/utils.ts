@@ -105,18 +105,38 @@ export const convertDinoLocations = async (
   }
 };
 
-export const getAllDinousars = async (name?: string) => {
+export const getAllDinousars = async ({
+  name,
+  foundIn,
+}: {
+  name?: string;
+  foundIn?: string;
+}) => {
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
     const resp = await fetch(url);
     const dinosaurs: DinoDataType[] = await resp.json();
+    let filteredDinos: DinoDataType[] = [];
     if (name) {
-      const searchResult= dinosaurs.filter((dino) =>
+      filteredDinos = dinosaurs.filter((dino) =>
         dino.name.toLowerCase().startsWith(name.toLowerCase())
       );
-      return searchResult || [];
     }
-    return dinosaurs;
+    if (foundIn) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter((dino) =>
+          dino.foundIn.toLowerCase().includes(foundIn.toLowerCase())
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.foundIn.toLowerCase() === foundIn.toLowerCase()
+        );
+      }
+    }
+    if (!name && !foundIn) {
+      return dinosaurs;
+    }
+    return filteredDinos;
   } catch (error) {
     console.log("Failed to fetch dinausors: ", error);
     return [];
