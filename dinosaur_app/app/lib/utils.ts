@@ -105,14 +105,21 @@ export const convertDinoLocations = async (
   }
 };
 
-export const getAllDinousars = async () => {
+export const getAllDinousars = async (name?: string) => {
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
     const resp = await fetch(url);
-    return resp.json();
+    const dinosaurs: DinoDataType[] = await resp.json();
+    if (name) {
+      const searchResult= dinosaurs.filter((dino) =>
+        dino.name.toLowerCase().startsWith(name.toLowerCase())
+      );
+      return searchResult || [];
+    }
+    return dinosaurs;
   } catch (error) {
     console.log("Failed to fetch dinausors: ", error);
-    return []
+    return [];
   }
 };
 
@@ -167,13 +174,14 @@ export const getDigSites = async () => {
   return locationNestedObj as ConvertedLocations[];
 };
 
-export const getDinoById = async (id: number): Promise<DinoDataType | undefined> => {
+export const getDinoById = async (
+  id: number
+): Promise<DinoDataType | undefined> => {
   const url = "https://chinguapi.onrender.com/dinosaurs";
   const resp = await fetch(url);
   const dinoData: DinoDataType[] = await resp.json();
   return dinoData?.find((dino) => dino.id === Number(id));
 };
-
 
 export async function formatDate(dateString: any) {
   const options: any = {
