@@ -20,7 +20,7 @@ const Page = async ({ params }: Readonly<DinoNewsProp>) => {
   if (verifiedPublishedAt) {
     const dinoNews = await fetchLatestNews();
     specificNews = await dinoNews.find(
-      (news) => news.publishedAt == verifiedPublishedAt
+      (news: any) => news.publishedAt == verifiedPublishedAt
     );
   }
 
