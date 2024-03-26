@@ -23,7 +23,14 @@ export const fetchLatestNews = async () => {
     const newsApiKey = process.env.NEWS_API_KEY;
     const fromDate = getPastDate(29); // Assuming getPastDate function provides past date
 
-    const topics = [ "cretaceous dinosaur", "dinosaur digging", "Jurassic dinosaur", "Triassic era dinosaur", "dinosaur fossils", "discovered dinosaur fossil"];
+    const topics = [
+      "cretaceous dinosaur",
+      "dinosaur digging",
+      "Jurassic dinosaur",
+      "Triassic era dinosaur",
+      "dinosaur fossils",
+      "discovered dinosaur fossil",
+    ];
 
     // Make promises for each topic
     const newsPromises = topics.map(async (topic) => {
@@ -47,8 +54,12 @@ export const fetchLatestNews = async () => {
     // Filter articles with unique urlToImage & exclude "dinosaur" in title (stricter check)
     const uniqueArticles = [];
     const uniqueArticlesUrls = new Set();
-    for (const article of combinedArticles) {// Check for valid title and exclude articles that don't contain "dinosaur" (case-insensitive)
-      if (article.title && !article.title.trim().toLowerCase().includes("dinosaur")) {      
+    for (const article of combinedArticles) {
+      // Check for valid title and exclude articles that don't contain "dinosaur" (case-insensitive)
+      if (
+        article.title &&
+        !article.title.trim().toLowerCase().includes("dinosaur")
+      ) {
         // Check if urlToImage starts with https://
         if (article.urlToImage && article.urlToImage.startsWith("https://")) {
           uniqueArticlesUrls.add(article.title?.toLowerCase()); // Add title for uniqueness
@@ -67,9 +78,6 @@ export const fetchLatestNews = async () => {
     return []; // Return empty array on error
   }
 };
-
-
-
 
 // Converts a Dino found-in location into a geoJSON coordinate compatible with mapbox
 export const convertDinoLocations = async (
@@ -94,6 +102,17 @@ export const convertDinoLocations = async (
   } catch (error) {
     console.log("Failed to convert location to geo Coordinates");
     return [];
+  }
+};
+
+export const getAllDinousars = async () => {
+  try {
+    const url = "https://chinguapi.onrender.com/dinosaurs";
+    const resp = await fetch(url);
+    return resp.json();
+  } catch (error) {
+    console.log("Failed to fetch dinausors: ", error);
+    return []
   }
 };
 
@@ -149,24 +168,24 @@ export const getDigSites = async () => {
 };
 
 export const getDinoById = async (id: number): Promise<DinoDataType | undefined> => {
-    const url = "https://chinguapi.onrender.com/dinosaurs";
-    const resp = await fetch(url);
-    const dinoData: DinoDataType[] = await resp.json();
-    return dinoData?.find((dino) => dino.id === Number(id));
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinoData: DinoDataType[] = await resp.json();
+  return dinoData?.find((dino) => dino.id === Number(id));
 };
 
 
 export async function formatDate(dateString: any) {
   const options: any = {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZone: 'UTC',
-    hour12: true
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "UTC",
+    hour12: true,
   };
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', options); // Replace '/' with ', '
+  return date.toLocaleDateString("en-US", options); // Replace '/' with ', '
 }
