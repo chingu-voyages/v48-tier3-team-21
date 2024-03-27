@@ -33,7 +33,7 @@ export const fetchLatestNews = async () => {
 
     // Make promises for each topic
     const newsPromises = topics.map(async (topic) => {
-      const url = `https://newsapi.org/v2/everything?q=${topic}&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}`;
+      const url = `https://newsapi.org/v2/everything?q=${topic}&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}&language=en`;
       const response = await fetch(url);
 
       if (response.status === 200) {
