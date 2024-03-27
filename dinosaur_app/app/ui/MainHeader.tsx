@@ -9,7 +9,7 @@ export const NavLinks = () => {
     <div className="w-full flex max-sm:flex-col sm:flex-row items-center max-sm:items-end gap-5 text-sm font-bold">
       <Link href={"/"}>Home</Link>
       <Link href={"/explore-dino"}>Go Digging</Link>
-      <Link href={"/chats-table"}>Data</Link>
+      <Link href={"/charts-table"}>Data</Link>
       <Link href={"/dino-news"}>News</Link>
       <Link href={"/extras/about-us"}>About Us</Link>
     </div>
