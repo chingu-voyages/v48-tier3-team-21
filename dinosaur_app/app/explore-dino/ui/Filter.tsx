@@ -35,7 +35,6 @@ const Filter = ({
       params.delete(paramValue);
     }
     replace(`${pathname}?${params.toString()}`);
-    console.log(value);
   };
 
   return (
@@ -43,7 +42,7 @@ const Filter = ({
       onValueChange={(value) => handleChange(value)}
       defaultValue={searchParams.get(paramValue)?.toString()}
     >
-      <SelectTrigger className="w-[280px]">
+      <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

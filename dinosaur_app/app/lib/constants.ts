@@ -90,3 +90,11 @@ export const filterCountries = [
   "England, Niger, Romania, United Kingdom",
   "Zimbabwe",
 ];
+
+export const dinoDiets = [
+  "herbivorous",
+  "carnivorous",
+  "omnivorous",
+  "herbivorous or omnivorous",
+  "unknown",
+];

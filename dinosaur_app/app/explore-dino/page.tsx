@@ -9,23 +9,24 @@ import { getAllDinousars } from "../lib/utils";
 import SearchBar from "./ui/SearchBar";
 import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
-import { filterCountries } from "../lib/constants";
+import { dinoDiets, filterCountries } from "../lib/constants";
 
 const ExploreDino = ({
   searchParams,
 }: {
-  searchParams?: { name: string; foundIn: string };
+  searchParams?: { name: string; foundIn: string; diet: string };
 }) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
   const [loading, setLoading] = useState(false);
   const name = searchParams?.name || "";
   const foundIn = searchParams?.foundIn || "";
+  const diet = searchParams?.diet || "";
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
       setLoading(true);
       try {
-        const dinausors = await getAllDinousars({ name, foundIn });
+        const dinausors = await getAllDinousars({ name, foundIn, diet });
         setDinousars(dinausors);
       } catch (error) {
         console.log("Failed to fetch dinausors: ", error);
@@ -34,17 +35,22 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name, foundIn]);
+  }, [name, foundIn, diet]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
       <div className="flex gap-x-4">
         <SearchBar />
-        <div className="flex">
+        <div className="flex gap-x-2">
           <Filter
             placeholder="Countries"
             filterOptions={filterCountries}
             paramValue="foundIn"
+          />
+          <Filter
+            placeholder="Diet"
+            filterOptions={dinoDiets}
+            paramValue="diet"
           />
         </div>
       </div>

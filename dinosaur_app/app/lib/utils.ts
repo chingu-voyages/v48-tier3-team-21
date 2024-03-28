@@ -109,9 +109,11 @@ export const convertDinoLocations = async (
 export const getAllDinousars = async ({
   name,
   foundIn,
+  diet
 }: {
   name?: string;
   foundIn?: string;
+  diet?: string;
 }) => {
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
@@ -126,7 +128,7 @@ export const getAllDinousars = async ({
     if (foundIn) {
       if (filteredDinos.length > 0) {
         filteredDinos = filteredDinos.filter((dino) =>
-          dino.foundIn.toLowerCase().includes(foundIn.toLowerCase())
+          dino.foundIn.toLowerCase()===foundIn.toLowerCase()
         );
       } else {
         filteredDinos = dinosaurs.filter(
@@ -134,7 +136,18 @@ export const getAllDinousars = async ({
         );
       }
     }
-    if (!name && !foundIn) {
+    if (diet) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter((dino) =>
+          dino.diet.toLowerCase()===diet.toLowerCase()
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.diet.toLowerCase() === diet.toLowerCase()
+        );
+      }
+    }
+    if (!name && !foundIn && !diet) {
       return dinosaurs;
     }
     return filteredDinos;
