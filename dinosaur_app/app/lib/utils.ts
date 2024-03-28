@@ -109,17 +109,19 @@ export const getAllDinousars = async ({
   foundIn,
   diet,
   length,
+  weight,
 }: {
   name?: string;
   foundIn?: string;
   diet?: string;
   length?: string;
+  weight?: string;
 }) => {
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
     const resp = await fetch(url);
     const dinosaurs: DinoDataType[] = await resp.json();
-    let filteredDinos: DinoDataType[] = [];
+    let filteredDinos: DinoDataType[] = [];    
     if (name) {
       filteredDinos = dinosaurs.filter((dino) =>
         dino.name.toLowerCase().startsWith(name.toLowerCase())
@@ -158,7 +160,18 @@ export const getAllDinousars = async ({
         );
       }
     }
-    if (!name && !foundIn && !diet && !length) {
+    if (weight) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.weight.toString() === weight
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.weight.toString() === weight
+        );   
+      }
+    }
+    if (!name && !foundIn && !diet && !length && !weight) {
       return dinosaurs;
     }
     return filteredDinos;

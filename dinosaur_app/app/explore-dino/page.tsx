@@ -9,7 +9,12 @@ import { getAllDinousars } from "../lib/utils";
 import SearchBar from "./ui/SearchBar";
 import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
-import { dinoDiets, dinoLengths, filterCountries } from "../lib/constants";
+import {
+  dinoDiets,
+  dinoLengths,
+  dinoWeights,
+  filterCountries,
+} from "../lib/constants";
 
 const ExploreDino = ({
   searchParams,
@@ -19,6 +24,7 @@ const ExploreDino = ({
     foundIn: string;
     diet: string;
     length: string;
+    weight: string;
   };
 }) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
@@ -27,6 +33,7 @@ const ExploreDino = ({
   const foundIn = searchParams?.foundIn || "";
   const diet = searchParams?.diet || "";
   const length = searchParams?.length || "";
+  const weight = searchParams?.weight || "";
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
@@ -37,6 +44,7 @@ const ExploreDino = ({
           foundIn,
           diet,
           length,
+          weight,
         });
         setDinousars(dinausors);
       } catch (error) {
@@ -46,13 +54,13 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name, foundIn, diet, length]);
+  }, [name, foundIn, diet, length, weight]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
-      <div className="flex gap-x-4">
+      <div className="flex flex-col lg:flex-row gap-x-4">
         <SearchBar />
-        <div className="flex gap-x-2">
+        <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
           <Filter
             placeholder="Countries"
             filterOptions={filterCountries}
@@ -67,6 +75,11 @@ const ExploreDino = ({
             placeholder="Length"
             filterOptions={dinoLengths}
             paramValue="length"
+          />
+          <Filter
+            placeholder="Weight"
+            filterOptions={dinoWeights}
+            paramValue="weight"
           />
         </div>
       </div>
