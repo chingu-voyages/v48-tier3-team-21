@@ -15,7 +15,7 @@ interface SingleDynoProps {
 
 const SingleDyno = async ({ params }: SingleDynoProps) => {
   const { dinoId } = params;
- 
+
   if (isNaN(Number(dinoId))) {
     redirect("/explore-dino");
   }
@@ -71,7 +71,11 @@ const SingleDyno = async ({ params }: SingleDynoProps) => {
             </p>
             <p className="text-slate-600 mt-2">
               <span className="font-semibold">Weight</span>:{" "}
-              {dino?.weight === "N/A" ? "1200" : dino?.weight} kilograms
+              {dino?.weight === "N/A" ? "unknown" : dino?.weight} kilograms
+            </p>
+            <p className="text-slate-600 mt-2">
+              <span className="font-semibold">Diet</span>:{" "}
+              {dino?.diet === "N/A" ? "Unknown" : dino?.diet}
             </p>
           </div>
           <div>

@@ -9,23 +9,44 @@ import { getAllDinousars } from "../lib/utils";
 import SearchBar from "./ui/SearchBar";
 import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
-import { filterCountries } from "../lib/constants";
+import {
+  dinoDiets,
+  dinoLengths,
+  dinoWeights,
+  filterCountries,
+} from "../lib/constants";
+import RemoveFilter from "./ui/RemoveFilter";
 
 const ExploreDino = ({
   searchParams,
 }: {
-  searchParams?: { name: string; foundIn: string };
+  searchParams?: {
+    name: string;
+    foundIn: string;
+    diet: string;
+    length: string;
+    weight: string;
+  };
 }) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
   const [loading, setLoading] = useState(false);
   const name = searchParams?.name || "";
   const foundIn = searchParams?.foundIn || "";
+  const diet = searchParams?.diet || "";
+  const length = searchParams?.length || "";
+  const weight = searchParams?.weight || "";
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
       setLoading(true);
       try {
-        const dinausors = await getAllDinousars({ name, foundIn });
+        const dinausors = await getAllDinousars({
+          name,
+          foundIn,
+          diet,
+          length,
+          weight,
+        });
         setDinousars(dinausors);
       } catch (error) {
         console.log("Failed to fetch dinausors: ", error);
@@ -34,17 +55,35 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name, foundIn]);
+  }, [name, foundIn, diet, length, weight]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
-      <div className="flex gap-x-4">
+      <div className="flex flex-col items-center justify-center lg:flex-row gap-x-4">
         <SearchBar />
-        <Filter
-          placeholder="Countries"
-          filterOptions={filterCountries}
-          paramValue="foundIn"
-        />
+        <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
+          <Filter
+            placeholder="Countries"
+            filterOptions={filterCountries}
+            paramValue="foundIn"
+          />
+          <Filter
+            placeholder="Diet"
+            filterOptions={dinoDiets}
+            paramValue="diet"
+          />
+          <Filter
+            placeholder="Length"
+            filterOptions={dinoLengths}
+            paramValue="length"
+          />
+          <Filter
+            placeholder="Weight"
+            filterOptions={dinoWeights}
+            paramValue="weight"
+          />
+        </div>
+        <RemoveFilter/>
       </div>
       <div
         className={

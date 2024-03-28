@@ -51,10 +51,10 @@ const Dinocard = ({
         </div>
       </CardHeader>
       <CardContent className="h-[96px] overflow-hidden">
-        <div className="text-slate-500">
+        <div className="text-slate-500 line-clamp-4">
           {description === "N/A"
-            ? dinoDescription.substring(0, 150)
-            : description.substring(0, 150)}
+            ? dinoDescription
+            : description}
           ...
         </div>
       </CardContent>

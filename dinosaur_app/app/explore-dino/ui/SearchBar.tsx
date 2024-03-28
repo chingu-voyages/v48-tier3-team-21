@@ -17,7 +17,7 @@ const SearchBar = () => {
       params.delete("name");
     }
     replace(`${pathname}?${params.toString()}`);
-  },300);
+  }, 300);
   return (
     <div className="relative w-80 lg:w-[500px]">
       <svg

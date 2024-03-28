@@ -19,7 +19,7 @@ const Filter = ({
   placeholder,
   paramValue,
 }: {
-  filterOptions: string[];
+  filterOptions: (string|number)[];
   placeholder: string;
   paramValue: string;
 }) => {
@@ -35,20 +35,22 @@ const Filter = ({
       params.delete(paramValue);
     }
     replace(`${pathname}?${params.toString()}`);
-    console.log(value);
   };
 
   return (
-    <Select onValueChange={(value)=>handleChange(value)}>
-      <SelectTrigger className="w-[280px]">
+    <Select
+      onValueChange={(value) => handleChange(value)}
+      defaultValue={searchParams.get(paramValue)?.toString()}
+    >
+      <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>{placeholder}</SelectLabel>
           <SelectItem value="all">all</SelectItem>
-          {filterOptions.map((option: string) => (
-            <SelectItem key={option} value={option}>
+          {filterOptions.map((option) => (
+            <SelectItem key={option} value={option.toString()}>
               {option}
             </SelectItem>
           ))}
