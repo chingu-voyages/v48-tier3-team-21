@@ -39,7 +39,10 @@ const Filter = ({
   };
 
   return (
-    <Select onValueChange={(value)=>handleChange(value)}>
+    <Select
+      onValueChange={(value) => handleChange(value)}
+      defaultValue={searchParams.get(paramValue)?.toString()}
+    >
       <SelectTrigger className="w-[280px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

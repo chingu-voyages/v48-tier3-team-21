@@ -40,11 +40,13 @@ const ExploreDino = ({
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
       <div className="flex gap-x-4">
         <SearchBar />
-        <Filter
-          placeholder="Countries"
-          filterOptions={filterCountries}
-          paramValue="foundIn"
-        />
+        <div className="flex">
+          <Filter
+            placeholder="Countries"
+            filterOptions={filterCountries}
+            paramValue="foundIn"
+          />
+        </div>
       </div>
       <div
         className={
