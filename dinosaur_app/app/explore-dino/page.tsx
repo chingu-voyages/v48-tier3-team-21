@@ -15,6 +15,7 @@ import {
   dinoWeights,
   filterCountries,
 } from "../lib/constants";
+import RemoveFilter from "./ui/RemoveFilter";
 
 const ExploreDino = ({
   searchParams,
@@ -58,7 +59,7 @@ const ExploreDino = ({
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
-      <div className="flex flex-col lg:flex-row gap-x-4">
+      <div className="flex flex-col items-center justify-center lg:flex-row gap-x-4">
         <SearchBar />
         <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
           <Filter
@@ -82,6 +83,7 @@ const ExploreDino = ({
             paramValue="weight"
           />
         </div>
+        <RemoveFilter/>
       </div>
       <div
         className={
