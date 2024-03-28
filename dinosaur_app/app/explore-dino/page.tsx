@@ -9,24 +9,35 @@ import { getAllDinousars } from "../lib/utils";
 import SearchBar from "./ui/SearchBar";
 import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
-import { dinoDiets, filterCountries } from "../lib/constants";
+import { dinoDiets, dinoLengths, filterCountries } from "../lib/constants";
 
 const ExploreDino = ({
   searchParams,
 }: {
-  searchParams?: { name: string; foundIn: string; diet: string };
+  searchParams?: {
+    name: string;
+    foundIn: string;
+    diet: string;
+    length: string;
+  };
 }) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
   const [loading, setLoading] = useState(false);
   const name = searchParams?.name || "";
   const foundIn = searchParams?.foundIn || "";
   const diet = searchParams?.diet || "";
+  const length = searchParams?.length || "";
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
       setLoading(true);
       try {
-        const dinausors = await getAllDinousars({ name, foundIn, diet });
+        const dinausors = await getAllDinousars({
+          name,
+          foundIn,
+          diet,
+          length,
+        });
         setDinousars(dinausors);
       } catch (error) {
         console.log("Failed to fetch dinausors: ", error);
@@ -35,7 +46,7 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name, foundIn, diet]);
+  }, [name, foundIn, diet, length]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
@@ -51,6 +62,11 @@ const ExploreDino = ({
             placeholder="Diet"
             filterOptions={dinoDiets}
             paramValue="diet"
+          />
+          <Filter
+            placeholder="Length"
+            filterOptions={dinoLengths}
+            paramValue="length"
           />
         </div>
       </div>

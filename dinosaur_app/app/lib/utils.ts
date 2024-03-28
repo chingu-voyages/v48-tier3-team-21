@@ -65,13 +65,11 @@ export const fetchLatestNews = async () => {
           uniqueArticles.push(article);
           // Limit to 30 unique articles
           if (uniqueArticles.length === 30) {
-             
             break;
           }
         }
       }
     }
-
 
     return uniqueArticles;
   } catch (error) {
@@ -109,11 +107,13 @@ export const convertDinoLocations = async (
 export const getAllDinousars = async ({
   name,
   foundIn,
-  diet
+  diet,
+  length,
 }: {
   name?: string;
   foundIn?: string;
   diet?: string;
+  length?: string;
 }) => {
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
@@ -127,8 +127,8 @@ export const getAllDinousars = async ({
     }
     if (foundIn) {
       if (filteredDinos.length > 0) {
-        filteredDinos = filteredDinos.filter((dino) =>
-          dino.foundIn.toLowerCase()===foundIn.toLowerCase()
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.foundIn.toLowerCase() === foundIn.toLowerCase()
         );
       } else {
         filteredDinos = dinosaurs.filter(
@@ -138,8 +138,8 @@ export const getAllDinousars = async ({
     }
     if (diet) {
       if (filteredDinos.length > 0) {
-        filteredDinos = filteredDinos.filter((dino) =>
-          dino.diet.toLowerCase()===diet.toLowerCase()
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.diet.toLowerCase() === diet.toLowerCase()
         );
       } else {
         filteredDinos = dinosaurs.filter(
@@ -147,7 +147,18 @@ export const getAllDinousars = async ({
         );
       }
     }
-    if (!name && !foundIn && !diet) {
+    if (length) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.length.toString() === length
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.length.toString() === length
+        );
+      }
+    }
+    if (!name && !foundIn && !diet && !length) {
       return dinosaurs;
     }
     return filteredDinos;
@@ -169,8 +180,8 @@ export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
         const geoLocations = await convertDinoLocations(locations);
         processedData.push({ ...element, geoLocations });
       }
-      
-      return processedData
+
+      return processedData;
     } else {
       return null;
     }

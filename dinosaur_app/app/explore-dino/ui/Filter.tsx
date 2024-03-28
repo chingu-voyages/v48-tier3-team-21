@@ -19,7 +19,7 @@ const Filter = ({
   placeholder,
   paramValue,
 }: {
-  filterOptions: string[];
+  filterOptions: (string|number)[];
   placeholder: string;
   paramValue: string;
 }) => {
@@ -49,8 +49,8 @@ const Filter = ({
         <SelectGroup>
           <SelectLabel>{placeholder}</SelectLabel>
           <SelectItem value="all">all</SelectItem>
-          {filterOptions.map((option: string) => (
-            <SelectItem key={option} value={option}>
+          {filterOptions.map((option) => (
+            <SelectItem key={option} value={option.toString()}>
               {option}
             </SelectItem>
           ))}
