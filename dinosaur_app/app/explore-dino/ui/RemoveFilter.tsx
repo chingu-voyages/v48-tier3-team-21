@@ -11,7 +11,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 const RemoveFilter = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { replace, refresh } = useRouter();
+  const { replace } = useRouter();
   const handleClick = () => {
     const params = new URLSearchParams(searchParams);
     const keys = Array.from(params.keys());

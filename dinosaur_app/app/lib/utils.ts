@@ -251,6 +251,64 @@ export const getDinoById = async (
   return dinoData?.find((dino) => dino.id === Number(id));
 };
 
+export const getDinoLocationsforFilter = async (): Promise<string[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const locations = Array.from(
+    new Set(
+      Array.from(new Set(dinosaurs.map((dino) => dino.foundIn)))
+        .map((loc) => loc.split(","))
+        .flat()
+        .map((loc) => loc.trim())
+    )
+  ).sort();
+
+  return locations;
+};
+
+export const getDinoDietsforFilter = async (): Promise<string[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const diets = Array.from(new Set(dinosaurs.map((dino) => dino.diet))).sort();
+  return diets;
+};
+
+export const getDinoLengthsforFilter = async (): Promise<number[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const lengths = Array.from(
+    new Set(
+      dinosaurs.map((dino) => {
+        if (!isNaN(Number(dino.length))) {
+          return Number(dino.length);
+        }
+      })
+    )
+  ).filter((length) => length !== undefined) as number[];
+
+  return lengths.sort((a, b) => a - b);
+};
+
+export const getDinoWeightsforFilter = async (): Promise<number[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const weights = Array.from(
+    new Set(
+      dinosaurs.map((dino) => {
+        if (!isNaN(Number(dino.weight))) {
+          return Number(dino.weight);
+        }
+      })
+    )
+  ).filter((weight) => weight !== undefined) as number[];
+
+  return weights.sort((a, b) => a - b);
+};
+
 export async function formatDate(dateString: any) {
   const options: any = {
     weekday: "short",
