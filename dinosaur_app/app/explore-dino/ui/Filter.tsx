@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useState } from "react";
+import React, { useState,useEffect} from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,13 +19,14 @@ const Filter = ({
   placeholder,
   paramValue,
 }: {
-  filterOptions: (string|number)[];
+  filterOptions: () => Promise<(string | number)[]>;
   placeholder: string;
   paramValue: string;
 }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [filterValues, setFilterValues] = useState<(string | number)[]>([]);
 
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -36,6 +37,13 @@ const Filter = ({
     }
     replace(`${pathname}?${params.toString()}`);
   };
+  useEffect(() => {
+     ( async () => {
+      const values = await filterOptions();
+      setFilterValues(values);
+     })();
+    ;
+  }, []);
 
   return (
     <Select
@@ -49,7 +57,7 @@ const Filter = ({
         <SelectGroup>
           <SelectLabel>{placeholder}</SelectLabel>
           <SelectItem value="all">all</SelectItem>
-          {filterOptions.map((option) => (
+          {filterValues?.map((option) => (
             <SelectItem key={option} value={option.toString()}>
               {option}
             </SelectItem>

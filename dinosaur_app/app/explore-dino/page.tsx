@@ -9,13 +9,9 @@ import { getAllDinousars } from "../lib/utils";
 import SearchBar from "./ui/SearchBar";
 import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
-import {
-  dinoDiets,
-  dinoLengths,
-  dinoWeights,
-  filterCountries,
-} from "../lib/constants";
+
 import RemoveFilter from "./ui/RemoveFilter";
+import { getDinoLocationsforFilter } from "../lib/utils";
 
 const ExploreDino = ({
   searchParams,
@@ -62,12 +58,12 @@ const ExploreDino = ({
       <div className="flex flex-col items-center justify-center lg:flex-row gap-x-4">
         <SearchBar />
         <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
-          <Filter
+          {<Filter
             placeholder="Countries"
-            filterOptions={filterCountries}
+            filterOptions={getDinoLocationsforFilter}
             paramValue="foundIn"
-          />
-          <Filter
+          />}
+          {/* <Filter
             placeholder="Diet"
             filterOptions={dinoDiets}
             paramValue="diet"
@@ -81,7 +77,7 @@ const ExploreDino = ({
             placeholder="Weight"
             filterOptions={dinoWeights}
             paramValue="weight"
-          />
+          /> */}
         </div>
         <RemoveFilter/>
       </div>

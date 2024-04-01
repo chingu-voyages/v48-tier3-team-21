@@ -241,6 +241,22 @@ export const getDinoById = async (
   return dinoData?.find((dino) => dino.id === Number(id));
 };
 
+export const getDinoLocationsforFilter = async () => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const locations = Array.from(
+    new Set(
+      Array.from(new Set(dinosaurs.map((dino) => dino.foundIn)))
+        .map((loc) => loc.split(","))
+        .flat()
+        .map((loc) => loc.trim())
+    )
+  ).sort();
+
+  return locations;
+};
+
 export async function formatDate(dateString: any) {
   const options: any = {
     weekday: "short",
