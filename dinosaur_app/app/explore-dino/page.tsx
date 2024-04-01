@@ -4,18 +4,14 @@ import React, { useEffect, useState } from "react";
 import { DinoDataType } from "../lib/definitions";
 import Dinocard from "./ui/Dinocard";
 
-import { getAllDinousars } from "../lib/utils";
+import { getAllDinousars, getDinoDietsforFilter, getDinoLengthsforFilter, getDinoWeightsforFilter } from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
-import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
-import {
-  dinoDiets,
-  dinoLengths,
-  dinoWeights,
-  filterCountries,
-} from "../lib/constants";
+
 import RemoveFilter from "./ui/RemoveFilter";
+import { getDinoLocationsforFilter } from "../lib/utils";
+import PageLoading from "../ui/PageLoading";
 
 const ExploreDino = ({
   searchParams,
@@ -62,24 +58,24 @@ const ExploreDino = ({
       <div className="flex flex-col items-center justify-center lg:flex-row gap-x-4">
         <SearchBar />
         <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
-          <Filter
+          {<Filter
             placeholder="Countries"
-            filterOptions={filterCountries}
+            filterOptions={getDinoLocationsforFilter}
             paramValue="foundIn"
-          />
+          />}
           <Filter
             placeholder="Diet"
-            filterOptions={dinoDiets}
+            filterOptions={getDinoDietsforFilter}
             paramValue="diet"
           />
           <Filter
-            placeholder="Length"
-            filterOptions={dinoLengths}
+            placeholder="Length in (M)"
+            filterOptions={getDinoLengthsforFilter}
             paramValue="length"
           />
           <Filter
-            placeholder="Weight"
-            filterOptions={dinoWeights}
+            placeholder="Weight in (kg)"
+            filterOptions={getDinoWeightsforFilter}
             paramValue="weight"
           />
         </div>
@@ -93,7 +89,7 @@ const ExploreDino = ({
         }
       >
         {loading ? (
-          <Loading />
+          <PageLoading />
         ) : name.length > 0 && dinausors.length === 0 ? (
           <div className="text-3xl font-bold text-orange-600 text-center">
             No Dinosours found
