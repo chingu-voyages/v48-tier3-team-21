@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import BackButton from "../ui/BackButton";
 import clsx from "clsx";
 import PageLoading from "@/app/ui/PageLoading";
+import fallbackImage from "@/public/dino_icon.svg";
 
 interface DinoNewsProp {
   params: {
@@ -65,6 +66,14 @@ const Page = async ({ params }: Readonly<DinoNewsProp>) => {
           className={clsx("w-auto object-contain", {
             hidden: !specificNews,
           })}
+          // onLoadingComplete={(event) => {
+          //   if (event.naturalWidth === 0) {
+          //     event.srcset = fallbackImage;
+          //   }
+          // }}
+          // onError={(event) => {
+          //   event.currentTarget.srcset = fallbackImage;
+          // }}
         />
 
         <p>{specificNews?.content}</p>
