@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { DinoDataType } from "../lib/definitions";
 import Dinocard from "./ui/Dinocard";
 
-import { getAllDinousars, getDinoDietsforFilter } from "../lib/utils";
+import { getAllDinousars, getDinoDietsforFilter, getDinoLengthsforFilter, getDinoWeightsforFilter } from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
 import Loading from "../ui/Loading";
@@ -68,16 +68,16 @@ const ExploreDino = ({
             filterOptions={getDinoDietsforFilter}
             paramValue="diet"
           />
-         {/*  <Filter
+          <Filter
             placeholder="Length in (M)"
-            filterOptions={dinoLengths}
+            filterOptions={getDinoLengthsforFilter}
             paramValue="length"
           />
           <Filter
             placeholder="Weight in (kg)"
-            filterOptions={dinoWeights}
+            filterOptions={getDinoWeightsforFilter}
             paramValue="weight"
-          /> */}
+          />
         </div>
         <RemoveFilter/>
       </div>
