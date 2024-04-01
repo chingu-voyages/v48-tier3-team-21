@@ -7,11 +7,11 @@ import Dinocard from "./ui/Dinocard";
 import { getAllDinousars, getDinoDietsforFilter, getDinoLengthsforFilter, getDinoWeightsforFilter } from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
-import Loading from "../ui/Loading";
 import Filter from "./ui/Filter";
 
 import RemoveFilter from "./ui/RemoveFilter";
 import { getDinoLocationsforFilter } from "../lib/utils";
+import PageLoading from "../ui/PageLoading";
 
 const ExploreDino = ({
   searchParams,
@@ -89,7 +89,7 @@ const ExploreDino = ({
         }
       >
         {loading ? (
-          <Loading />
+          <PageLoading />
         ) : name.length > 0 && dinausors.length === 0 ? (
           <div className="text-3xl font-bold text-orange-600 text-center">
             No Dinosours found
