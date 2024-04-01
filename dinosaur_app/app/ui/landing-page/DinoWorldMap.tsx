@@ -8,6 +8,7 @@ import clsx from "clsx";
 import Loading from "../Loading";
 import { getDigSites } from "@/app/lib/utils";
 import { isNumber } from "chart.js/helpers";
+import { useRouter } from "next/navigation";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? "";
 
@@ -20,31 +21,110 @@ const DinoWorldMap = ({
   digSites: ConvertedLocations[];
   decades: number[];
 }) => {
+  const router = useRouter();
   const mapContainer = useRef<any>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [lng, setLng] = useState(-5.5767);
   const [lat, setLat] = useState(-2.9796);
   const [zoom, setZoom] = useState(1.35);
   const [isDashVisible, setIsDashVisible] = useState(false);
-  const [selectedDecade, setSelectedDecade] = useState("all");
+  const [selectedDecade, setSelectedDecade] = useState<string | null>(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
   const [digSitesStored, setDigSitesStored] = useState<
     ConvertedLocations[] | null
   >(null);
-  const [dinoDataStored, setDinoDataStored] = useState<DinoDataType[] | null>(
-    null
-  );
   const [markers, setMarkers] = useState<mapboxgl.Marker[] | null>(null);
+  const [firstTimeLoading, setFirstTimeLoading] = useState(true);
+  const [decadeByQuery, setDecadeByQuery] = useState<string | null>(null);
 
   useEffect(() => {
     setIsDashVisible(true);
     setTimeout(() => setIsDashVisible(false), 5000);
-  }, [zoom]);
+    setDigSitesStored(digSites);
+  }, [digSites, dinoData, zoom]);
+
+  const anotateMap = useCallback(
+    (decade: string, digSiteByDecade: ConvertedLocations[] | null = null) => {
+      let digSitesArr = digSiteByDecade;
+
+      if (digSiteByDecade === null) {
+        digSitesArr = digSites;
+      }
+
+      if (digSitesArr !== null) {
+        let imgArr: string[] = [];
+        setIsMapLoading(true);
+        if (markers?.length) {
+          markers?.forEach((marker) => marker.remove());
+          setMarkers([]);
+        }
+
+        const markersArr = [] as mapboxgl.Marker[];
+
+        for (const site of digSitesArr) {
+          const markerdiv = document.createElement("div");
+
+          const count = Object.values(site)[0].count;
+          const coordinates = Object.values(site)[0].coordinates;
+          const foundIn = Object.keys(site)[0];
+
+          let relativeData: DinoDataType | undefined;
+
+          if (dinoData) {
+            do {
+              relativeData = dinoData.find(
+                (dino) =>
+                  dino.foundIn.includes(foundIn) &&
+                  !imgArr.includes(dino.imageSrc) &&
+                  !dino.imageSrc.includes("N/A")
+              );
+
+              if (!relativeData) {
+                // Find the first available data that satisfies the conditions
+                relativeData = dinoData.find(
+                  (dino) =>
+                    !imgArr.includes(dino.imageSrc) &&
+                    !dino.imageSrc.includes("N/A")
+                );
+              }
+
+              if (relativeData) {
+                // Add the image source to the array to prevent reusing it
+                imgArr.push(relativeData.imageSrc);
+              }
+            } while (!relativeData);
+
+            if (relativeData && coordinates.length) {
+              createRoot(markerdiv).render(
+                <Marker
+                  count={count}
+                  foundIn={`${foundIn}`}
+                  relativeData={relativeData}
+                  decade={decade}
+                />
+              );
+
+              const geoLocation = new LngLat(coordinates[0], coordinates[1]);
+              const marker =
+                map.current &&
+                new mapboxgl.Marker(markerdiv)
+                  .setLngLat(geoLocation)
+                  .addTo(map.current);
+              marker && markersArr.push(marker);
+            }
+          }
+        }
+
+        setMarkers([...markersArr]);
+        setIsMapLoading(false);
+        router.push(`?decade=${decade}`, { scroll: false });
+      }
+    },
+    [digSites, dinoData, markers]
+  );
 
   // initialize map when component mounts
   useEffect(() => {
-    setDinoDataStored(dinoData);
-    setDigSitesStored(digSites);
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/jaweki/cltyhsap500e701mj2ex388vh",
@@ -72,112 +152,81 @@ const DinoWorldMap = ({
     return () => map?.current?.remove();
   }, []);
 
-  const anotateMap = useCallback(
-    (digSiteByDecade?: ConvertedLocations[]) => {
-      let imgArr: string[] = [];
-      setIsMapLoading(true);
-      let digSitesArr = null;
-
-      if (!digSiteByDecade && digSitesStored) {
-        digSitesArr = digSitesStored;
-      } else {
-        digSitesArr = digSiteByDecade;
-      }
-
-      if (digSitesArr) {
-        if (markers?.length) {
-          console.log("markers before", markers?.length);
-          markers?.forEach((marker) => marker.remove());
-        }
-        const markersArr = [] as mapboxgl.Marker[];
-        for (const site of digSitesArr) {
-          const markerdiv = document.createElement("div");
-
-          const count = Object.values(site)[0].count;
-          const coordinates = Object.values(site)[0].coordinates;
-          const foundIn = Object.keys(site)[0];
-
-          let relativeData: DinoDataType | undefined;
-
-          if (dinoDataStored) {
-            do {
-              relativeData = dinoDataStored.find(
-                (dino) =>
-                  dino.foundIn.includes(foundIn) &&
-                  !imgArr.includes(dino.imageSrc) &&
-                  !dino.imageSrc.includes("N/A")
-              );
-
-              if (!relativeData) {
-                // Find the first available data that satisfies the conditions
-                relativeData = dinoDataStored.find(
-                  (dino) =>
-                    !imgArr.includes(dino.imageSrc) &&
-                    !dino.imageSrc.includes("N/A")
-                );
-              }
-
-              if (relativeData) {
-                // Add the image source to the array to prevent reusing it
-                imgArr.push(relativeData.imageSrc);
-              }
-            } while (!relativeData);
-
-            if (relativeData && coordinates.length) {
-              createRoot(markerdiv).render(
-                <Marker
-                  count={count}
-                  foundIn={`${foundIn}`}
-                  relativeData={relativeData}
-                />
-              );
-
-              const geoLocation = new LngLat(coordinates[0], coordinates[1]);
-              const marker =
-                map.current &&
-                new mapboxgl.Marker(markerdiv)
-                  .setLngLat(geoLocation)
-                  .addTo(map.current);
-              marker && markersArr.push(marker);
-
-              setIsMapLoading(false);
-            }
-          }
-        }
-        console.log("new markersArr length", markersArr.length);
-        setMarkers([...markersArr]);
-      }
+  const filterDinosByDecade = useCallback(
+    (decade: string | number) => {
+      const matchedDinos = dinoData.filter(
+        (dino) =>
+          Number(
+            dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+          ) >= Number(`${decade}0`) &&
+          Number(
+            dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+          ) <
+            Number(`${decade}0`) + 10
+      );
+      return matchedDinos;
     },
-    [digSitesStored, dinoDataStored]
+    [dinoData]
   );
-  // anotate map with makers
-  useEffect(() => {
-    anotateMap();
-  }, [anotateMap]);
 
-  const filterDinosByDecade = (decade: string | number) => {
+  const filterDinosWithoutDecade = useCallback(() => {
     const matchedDinos = dinoData.filter(
-      (dino) =>
-        Number(
-          dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
-        ) >= Number(`${decade}0`) &&
-        Number(dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]) <
-          Number(`${decade}0`) + 10
+      (dino) => String(dino.namedBy) === "N/A"
     );
     return matchedDinos;
-  };
+  }, [dinoData]);
+
   const handleDecadeChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     const decadeChoosen = e.currentTarget.value;
     setSelectedDecade(decadeChoosen);
 
     if (decadeChoosen === "all-dinos") {
-      anotateMap();
+      digSitesStored && anotateMap(decadeChoosen, digSitesStored);
     } else if (isNumber(Number(decadeChoosen))) {
       const matchedDinos = filterDinosByDecade(decadeChoosen);
       const digSitesByDecade = await getDigSites(matchedDinos);
-      anotateMap(digSitesByDecade);
+      anotateMap(decadeChoosen + "0s", digSitesByDecade);
+    } else if (decadeChoosen === "NaN") {
+      const matchedDinos = filterDinosWithoutDecade();
+      const availableDigSitesWithoutDecade = await getDigSites(matchedDinos);
+      anotateMap("N/A", availableDigSitesWithoutDecade);
     }
   };
+
+  // anotate map with makers
+  useEffect(() => {
+    async function initialLoadAnotation() {
+      const decadeByURL = new URLSearchParams(window.location.search).get(
+        "decade"
+      );
+
+      if (decadeByURL === "all-dinos" || !decadeByURL) {
+        anotateMap("all-dinos");
+        setDecadeByQuery(String(decadeByURL) || "all-dinos");
+      } else if (decadeByURL && isNumber(Number(decadeByURL.slice(0, 3)))) {
+        setDecadeByQuery(String(decadeByURL.slice(0, 3)));
+        const matchedDinos = filterDinosByDecade(decadeByURL.slice(0, 3));
+        const digSitesByDecade = await getDigSites(matchedDinos);
+        anotateMap(decadeByURL, digSitesByDecade);
+      } else if (decadeByURL === "N/A") {
+        setDecadeByQuery("NaN");
+        const matchedDinos = filterDinosWithoutDecade();
+        const availableDigSitesWithoutDecade = await getDigSites(matchedDinos);
+        anotateMap("N/A", availableDigSitesWithoutDecade);
+      }
+    }
+
+    if (firstTimeLoading) {
+      initialLoadAnotation();
+      setFirstTimeLoading(false);
+    }
+  }, [
+    anotateMap,
+    decadeByQuery,
+    filterDinosByDecade,
+    filterDinosWithoutDecade,
+    firstTimeLoading,
+  ]);
 
   return (
     <section
@@ -203,9 +252,10 @@ const DinoWorldMap = ({
 
         <div className=" flex lg:flex-col gap-1 flex-row item-center">
           <span className=" font-cabinSketch">Dig by Decade Discovered: </span>
+
           <select
-            id="dinosaur-discovery-decade"
-            value={selectedDecade}
+            id="dinosaur-discovery-decade-selection"
+            value={selectedDecade ?? decadeByQuery ?? "all-dinos"}
             onChange={handleDecadeChange}
             className=" border border-black rounded-sm bg-slate-400 max-lg:grow"
           >
@@ -222,7 +272,7 @@ const DinoWorldMap = ({
       </div>
 
       <div className="h-[85vh] relative">
-        <div className="-z-20 absolute inset-0 bg-[rgb(193,156,129)] bg-opacity-60" />
+        <div className="-z-0 absolute inset-0 bg-[rgb(193,156,129)] bg-opacity-60" />
         <div
           className={clsx(
             " z-50 absolute inset-0 bg-[rgb(193,156,129)] bg-opacity-60 flex items-center justify-center",
