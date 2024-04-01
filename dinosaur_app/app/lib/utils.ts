@@ -257,6 +257,14 @@ export const getDinoLocationsforFilter = async () => {
   return locations;
 };
 
+export const getDinoDietsforFilter = async () => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const diets = Array.from(new Set(dinosaurs.map((dino) => dino.diet))).sort();
+  return diets;
+}
+
 export async function formatDate(dateString: any) {
   const options: any = {
     weekday: "short",
