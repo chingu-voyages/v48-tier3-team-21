@@ -5,13 +5,18 @@ import { ConvertedLocations, DinoDataType, geoLocation } from "./definitions";
 
 const getPastDate = (pastDays: number) => {
   const currentDate = new Date();
+  const utcCurrentDate = new Date(
+    currentDate.getUTCFullYear(),
+    currentDate.getUTCMonth(),
+    currentDate.getUTCDate()
+  );
   const pastDate = new Date(
-    currentDate.getTime() - pastDays * 24 * 60 * 60 * 1000
+    utcCurrentDate.getTime() - pastDays * 24 * 60 * 60 * 1000
   );
 
-  const year = pastDate.getFullYear();
-  const month = `${pastDate.getMonth() - 1}`.padStart(2, "0");
-  const day = `${pastDate.getDate()}`.padStart(2, "0");
+  const year = pastDate.getUTCFullYear();
+  const month = `${pastDate.getUTCMonth() + 1}`.padStart(2, "0"); // Month is zero-indexed
+  const day = `${pastDate.getUTCDate()}`.padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 };
@@ -23,12 +28,11 @@ export const fetchLatestNews = async () => {
     const fromDate = getPastDate(29); // Assuming getPastDate function provides past date
 
     const topics = [
-      "cretaceous dinosaur",
+      "dinosaur fossils discovery",
+      "cretaceous dinosaurs",
       "dinosaur digging",
+      "triassic dinosaurs",
       "Jurassic dinosaur",
-      "Triassic era dinosaur",
-      "dinosaur fossils",
-      "discovered dinosaur fossil",
     ];
 
     // Make promises for each topic
@@ -204,8 +208,14 @@ export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
   }
 };
 
-export const getDigSites = async () => {
-  const dinoData = await fetchDinoData();
+export const getDigSites = async (parameter?: DinoDataType[]) => {
+  let dinoData = null;
+  if (!parameter) {
+    dinoData = await fetchDinoData();
+  } else {
+    dinoData = parameter;
+  }
+
   const dataGroupedByLocation = new Map();
   dinoData?.forEach((dino) => {
     dino.geoLocations?.forEach((location: geoLocation[]) => {
@@ -254,4 +264,23 @@ export async function formatDate(dateString: any) {
   };
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", options); // Replace '/' with ', '
+}
+
+export async function getDecadesFromData(dinosaurs: DinoDataType[]) {
+  const publicationYears = dinosaurs.map((dinosaur) => {
+    const namedByString = dinosaur.namedBy
+      .split(" ")
+      .pop()
+      ?.split("(")
+      .pop()
+      ?.split(")")[0];
+    if (namedByString) {
+      return parseInt(namedByString);
+    }
+  });
+
+  const uniqueDecades = new Set(
+    publicationYears.map((year) => year && Math.floor(year / 10))
+  );
+  return Array.from(uniqueDecades).sort() as number[];
 }

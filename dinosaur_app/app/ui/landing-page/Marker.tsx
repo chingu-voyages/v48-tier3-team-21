@@ -28,8 +28,11 @@ const Marker = ({
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className={"w-[300px]  border border-black"}>
-        <div className="w-full flex flex-col items-center border-4 border-orange-300 rounded-xl">
+      <DropdownMenuContent
+        style={{ zIndex: 999 }}
+        className={"w-[300px]  border border-black"}
+      >
+        <div className="w-full flex flex-col items-center border-4 border-orange-300 rounded-xl ">
           <Image
             src={relativeData.imageSrc}
             alt={`click to read more on Dinosaurs dicovered in ${foundIn}`}
