@@ -10,6 +10,14 @@ export const authConfig = {
       const isOnDinoNews = nextUrl.pathname.startsWith("/dino-news");
       const isOnExploreDino = nextUrl.pathname.startsWith("/explore-dino");
       const isOnChartsTable = nextUrl.pathname.startsWith("/charts-table");
+      const isGoogleResponse = nextUrl.pathname.startsWith(
+        "/api/auth/callback/google"
+      );
+
+      if (isGoogleResponse) {
+        console.log("Google login message: ");
+        return Response.redirect(new URL("/extras/about-us", nextUrl));
+      }
 
       if (isOnDinoNews || isOnExploreDino || isOnChartsTable) {
         if (isLoggedIn) return true;

@@ -11,11 +11,6 @@ import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/app/lib/action";
 import { useState } from "react";
 import Image from "next/image";
-import Loading from "@/app/ui/Loading";
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
 
 export default function LoginForm({
   isSignUp,
@@ -95,6 +90,7 @@ export default function LoginForm({
             <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900 peer-focus:peer-invalid:text-red-400" />
             <button
               type="button"
+              disabled={isLogginWithGoogle}
               onClick={() => {
                 if (validateEmailInput()) {
                   setEmailValidity(true);
@@ -126,7 +122,6 @@ export default function LoginForm({
             <hr className="w-1/2" />
           </span>
           <button
-            type="button"
             onClick={() => {
               setIsLogginWithGoogle(true);
             }}
@@ -150,6 +145,7 @@ export default function LoginForm({
         {/* sign up trigger */}
         <button
           type="button"
+          disabled={isLogginWithGoogle}
           onClick={() => {
             setIsSignUp(true);
           }}

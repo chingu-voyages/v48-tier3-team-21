@@ -5,11 +5,16 @@ import { authConfig } from "./auth.config";
 import { z } from "zod";
 import type { User } from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
+import { db } from "@/app/lib/database";
 
-async function getUser(email: string): Promise<User | undefined> {
+async function getUser(email: string): Promise<any> {
   try {
-    const user = [] as any; // code to fetch the user from db;
-    return user.rows[0];
+    const user = db.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return user;
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
@@ -27,6 +32,7 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
+
           const user = await getUser(email);
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
