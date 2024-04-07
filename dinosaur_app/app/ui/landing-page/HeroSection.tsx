@@ -33,7 +33,7 @@ const HeroSection = () => {
               Explore on Maps
             </Link>
             <Link
-              href={"/chats-table"}
+              href={"/charts-table"}
               className="p-2 py-4 text-sm rounded-lg bg-orange-300"
             >
               Chats & Data Table

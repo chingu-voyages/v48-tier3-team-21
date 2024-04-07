@@ -1,9 +1,13 @@
+import { Suspense } from "react";
 import LandingPage from "./ui/landing-page/LandingPage";
+import PageLoading from "./ui/PageLoading";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className=" w-full bg-white">
-      <LandingPage />
+      <Suspense fallback={<PageLoading />}>
+        <LandingPage />
+      </Suspense>
     </main>
   );
 }

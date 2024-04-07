@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./ui/globals.css";
 import MainHeader from "./ui/MainHeader";
+import FooterSection from "./ui/landing-page/footer-section/FooterSection";
+import Provider from "./ui/next-auth-client/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <MainHeader />
-        {children}
+        <Provider>
+          <MainHeader />
+          {children}
+          <FooterSection />
+        </Provider>
       </body>
     </html>
   );

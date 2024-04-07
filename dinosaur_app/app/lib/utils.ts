@@ -5,29 +5,39 @@ import { ConvertedLocations, DinoDataType, geoLocation } from "./definitions";
 
 const getPastDate = (pastDays: number) => {
   const currentDate = new Date();
+  const utcCurrentDate = new Date(
+    currentDate.getUTCFullYear(),
+    currentDate.getUTCMonth(),
+    currentDate.getUTCDate()
+  );
   const pastDate = new Date(
-    currentDate.getTime() - pastDays * 24 * 60 * 60 * 1000
+    utcCurrentDate.getTime() - pastDays * 24 * 60 * 60 * 1000
   );
 
-  const year = pastDate.getFullYear();
-  const month = `${pastDate.getMonth() - 1}`.padStart(2, "0");
-  const day = `${pastDate.getDate()}`.padStart(2, "0");
+  const year = pastDate.getUTCFullYear();
+  const month = `${pastDate.getUTCMonth() + 1}`.padStart(2, "0"); // Month is zero-indexed
+  const day = `${pastDate.getUTCDate()}`.padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 };
 
 // fetch latest news from news api
 export const fetchLatestNews = async () => {
-  unstable_noStore();
   try {
     const newsApiKey = process.env.NEWS_API_KEY;
     const fromDate = getPastDate(29); // Assuming getPastDate function provides past date
 
-    const topics = [ "cretaceous dinosaur", "dinosaur digging", "Jurassic dinosaur", "Triassic era dinosaur", "dinosaur fossils", "discovered dinosaur fossil"];
+    const topics = [
+      "dinosaur fossils discovery",
+      "cretaceous dinosaurs",
+      "dinosaur digging",
+      "triassic dinosaurs",
+      "Jurassic dinosaur",
+    ];
 
     // Make promises for each topic
     const newsPromises = topics.map(async (topic) => {
-      const url = `https://newsapi.org/v2/everything?q=${topic}&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}`;
+      const url = `https://newsapi.org/v2/everything?q=${topic}&from=${fromDate}&sortBy=popularity&apiKey=${newsApiKey}&language=en`;
       const response = await fetch(url);
 
       if (response.status === 200) {
@@ -45,10 +55,14 @@ export const fetchLatestNews = async () => {
     const combinedArticles = allNewsData.flat();
 
     // Filter articles with unique urlToImage & exclude "dinosaur" in title (stricter check)
-    const uniqueArticles = [];
+    const uniqueArticles: any = [];
     const uniqueArticlesUrls = new Set();
-    for (const article of combinedArticles) {// Check for valid title and exclude articles that don't contain "dinosaur" (case-insensitive)
-      if (article.title && !article.title.trim().toLowerCase().includes("dinosaur")) {      
+    for (const article of combinedArticles) {
+      // Check for valid title and exclude articles that don't contain "dinosaur" (case-insensitive)
+      if (
+        article.title &&
+        !article.title.trim().toLowerCase().includes("dinosaur")
+      ) {
         // Check if urlToImage starts with https://
         if (article.urlToImage && article.urlToImage.startsWith("https://")) {
           uniqueArticlesUrls.add(article.title?.toLowerCase()); // Add title for uniqueness
@@ -67,9 +81,6 @@ export const fetchLatestNews = async () => {
     return []; // Return empty array on error
   }
 };
-
-
-
 
 // Converts a Dino found-in location into a geoJSON coordinate compatible with mapbox
 export const convertDinoLocations = async (
@@ -97,6 +108,83 @@ export const convertDinoLocations = async (
   }
 };
 
+export const getAllDinousars = async ({
+  name,
+  foundIn,
+  diet,
+  length,
+  weight,
+}: {
+  name?: string;
+  foundIn?: string;
+  diet?: string;
+  length?: string;
+  weight?: string;
+}) => {
+  try {
+    const url = "https://chinguapi.onrender.com/dinosaurs";
+    const resp = await fetch(url);
+    const dinosaurs: DinoDataType[] = await resp.json();
+    let filteredDinos: DinoDataType[] = [];
+    if (name) {
+      filteredDinos = dinosaurs.filter((dino) =>
+        dino.name.toLowerCase().startsWith(name.toLowerCase())
+      );
+    }
+    if (foundIn) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter((dino) =>
+          dino.foundIn.toLowerCase().includes(foundIn.toLowerCase())
+        );
+      } else {
+        filteredDinos = dinosaurs.filter((dino) =>
+          dino.foundIn.toLowerCase().includes(foundIn.toLowerCase())
+        );
+      }
+    }
+    if (diet) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.diet.toLowerCase() === diet.toLowerCase()
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.diet.toLowerCase() === diet.toLowerCase()
+        );
+      }
+    }
+    if (length) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.length.toString() === length
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.length.toString() === length
+        );
+      }
+    }
+    if (weight) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) => dino.weight.toString() === weight
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) => dino.weight.toString() === weight
+        );
+      }
+    }
+    if (!name && !foundIn && !diet && !length && !weight) {
+      return dinosaurs;
+    }
+    return filteredDinos;
+  } catch (error) {
+    console.log("Failed to fetch dinausors: ", error);
+    return [];
+  }
+};
+
 export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
@@ -109,7 +197,7 @@ export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
         const geoLocations = await convertDinoLocations(locations);
         processedData.push({ ...element, geoLocations });
       }
-      // console.log(processedData);
+
       return processedData;
     } else {
       return null;
@@ -120,8 +208,14 @@ export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
   }
 };
 
-export const getDigSites = async () => {
-  const dinoData = await fetchDinoData();
+export const getDigSites = async (parameter?: DinoDataType[]) => {
+  let dinoData = null;
+  if (!parameter) {
+    dinoData = await fetchDinoData();
+  } else {
+    dinoData = parameter;
+  }
+
   const dataGroupedByLocation = new Map();
   dinoData?.forEach((dino) => {
     dino.geoLocations?.forEach((location: geoLocation[]) => {
@@ -148,9 +242,103 @@ export const getDigSites = async () => {
   return locationNestedObj as ConvertedLocations[];
 };
 
-export const getDinoById = async (id: number): Promise<DinoDataType | undefined> => {
-    const url = "https://chinguapi.onrender.com/dinosaurs";
-    const resp = await fetch(url);
-    const dinoData: DinoDataType[] = await resp.json();
-    return dinoData?.find((dino) => dino.id === Number(id));
+export const getDinoById = async (
+  id: number
+): Promise<DinoDataType | undefined> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinoData: DinoDataType[] = await resp.json();
+  return dinoData?.find((dino) => dino.id === Number(id));
 };
+
+export const getDinoLocationsforFilter = async (): Promise<string[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const locations = Array.from(
+    new Set(
+      Array.from(new Set(dinosaurs.map((dino) => dino.foundIn)))
+        .map((loc) => loc.split(","))
+        .flat()
+        .map((loc) => loc.trim())
+    )
+  ).sort();
+
+  return locations;
+};
+
+export const getDinoDietsforFilter = async (): Promise<string[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const diets = Array.from(new Set(dinosaurs.map((dino) => dino.diet))).sort();
+  return diets;
+};
+
+export const getDinoLengthsforFilter = async (): Promise<number[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const lengths = Array.from(
+    new Set(
+      dinosaurs.map((dino) => {
+        if (!isNaN(Number(dino.length))) {
+          return Number(dino.length);
+        }
+      })
+    )
+  ).filter((length) => length !== undefined) as number[];
+
+  return lengths.sort((a, b) => a - b);
+};
+
+export const getDinoWeightsforFilter = async (): Promise<number[]> => {
+  const url = "https://chinguapi.onrender.com/dinosaurs";
+  const resp = await fetch(url);
+  const dinosaurs: DinoDataType[] = await resp.json();
+  const weights = Array.from(
+    new Set(
+      dinosaurs.map((dino) => {
+        if (!isNaN(Number(dino.weight))) {
+          return Number(dino.weight);
+        }
+      })
+    )
+  ).filter((weight) => weight !== undefined) as number[];
+
+  return weights.sort((a, b) => a - b);
+};
+
+export async function formatDate(dateString: any) {
+  const options: any = {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "UTC",
+    hour12: true,
+  };
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", options); // Replace '/' with ', '
+}
+
+export async function getDecadesFromData(dinosaurs: DinoDataType[]) {
+  const publicationYears = dinosaurs.map((dinosaur) => {
+    const namedByString = dinosaur.namedBy
+      .split(" ")
+      .pop()
+      ?.split("(")
+      .pop()
+      ?.split(")")[0];
+    if (namedByString) {
+      return parseInt(namedByString);
+    }
+  });
+
+  const uniqueDecades = new Set(
+    publicationYears.map((year) => year && Math.floor(year / 10))
+  );
+  return Array.from(uniqueDecades).sort() as number[];
+}

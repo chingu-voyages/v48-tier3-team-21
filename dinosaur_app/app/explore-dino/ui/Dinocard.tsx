@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Card,
@@ -14,6 +14,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import dinoHeroImage from "@/public/landing-page/dinosaur-background-image.jpg";
 import { dinoDescription } from "@/app/lib/constants";
+import { useSearchParams } from "next/navigation";
 
 type DinocardProps = {
   id: number;
@@ -30,6 +31,15 @@ const Dinocard = ({
   imageSrc,
   description,
 }: DinocardProps) => {
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const [locationFilter, setLocationFilter] = useState("");
+
+  useEffect(() => {
+    const locationFilter = params.get("foundIn") || location.split(",")[0];
+    setLocationFilter(locationFilter);
+  }, [searchParams]);
+
   return (
     <Card className="w-[380px] h-[400px]" suppressHydrationWarning>
       <CardHeader>
@@ -46,16 +56,13 @@ const Dinocard = ({
           </CardTitle>
           <CardDescription className="flex flex-row justify-center items-center gap-x-2">
             <MapPin className="text-red" />
-            <span>{location.split(",")[0]}</span>
+            <span>{locationFilter}</span>
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="h-[96px] overflow-hidden">
-        <div className="text-slate-500">
-          {description === "N/A"
-            ? dinoDescription.substring(0, 150)
-            : description.substring(0, 150)}
-          ...
+        <div className="text-slate-500 line-clamp-4">
+          {description === "N/A" ? dinoDescription : description}
         </div>
       </CardContent>
       <CardFooter className="flex justify-end items-center mt-4">
