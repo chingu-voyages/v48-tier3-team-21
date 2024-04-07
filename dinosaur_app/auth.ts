@@ -3,7 +3,6 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { authConfig } from "./auth.config";
 import { z } from "zod";
-import type { User } from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
 import { db } from "@/app/lib/database";
 
@@ -21,7 +20,12 @@ async function getUser(email: string): Promise<any> {
   }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -37,7 +41,15 @@ export const { auth, signIn, signOut } = NextAuth({
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
-          if (passwordsMatch) return user;
+          if (passwordsMatch) {
+            const authenticatedUser = {
+              name: user.name,
+              email: user.email,
+              image: null,
+            };
+
+            return authenticatedUser;
+          }
         }
 
         console.log("Invalid credentials");

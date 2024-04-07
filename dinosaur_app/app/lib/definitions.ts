@@ -34,3 +34,10 @@ export type User = {
   email: string;
   password: string;
 };
+
+export type SignUpDataType = {
+  email: string;
+  password: string;
+  firstname: string;
+  lastname: string;
+};

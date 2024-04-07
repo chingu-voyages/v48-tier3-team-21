@@ -3,7 +3,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { NavLinks } from "./MainHeader";
+import { NavLinks } from "@/app/ui/RootHeader";
 
 const MobileNavigation = () => {
   return (

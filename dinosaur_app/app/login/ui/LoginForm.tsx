@@ -9,7 +9,7 @@ import googleIcon from "@/public/google-icon.svg";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/app/lib/action";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function LoginForm({
@@ -21,6 +21,13 @@ export default function LoginForm({
   const [editEmail, setEditEmail] = useState(true);
   const [isLogginWithGoogle, setIsLogginWithGoogle] = useState(false);
   const [emailValidity, setEmailValidity] = useState(true);
+  const [isLoginWithEmail, setIsLoginWithEmail] = useState(false);
+
+  useEffect(() => {
+    if (errorMessage) {
+      setIsLoginWithEmail(false);
+    }
+  }, [errorMessage]);
 
   const validateEmailInput = () => {
     const inpElem = document.getElementById("login-email") as HTMLInputElement;
@@ -32,6 +39,7 @@ export default function LoginForm({
       return false;
     }
   };
+
   return (
     <form
       action={dispatch}
@@ -122,8 +130,10 @@ export default function LoginForm({
             <hr className="w-1/2" />
           </span>
           <button
+            disabled={isLogginWithGoogle}
             onClick={() => {
               setIsLogginWithGoogle(true);
+              dispatch(new FormData());
             }}
             className={clsx(
               " w-full flex flex-row items-center justify-center gap-3 bg-orange-300 hover:bg-orange-400 py-3 rounded-lg transition-colors duration-300 ease-linear",
@@ -205,9 +215,22 @@ export default function LoginForm({
           </button>
           <button
             type="submit"
-            className="w-1/2 bg-orange-300 hover:bg-orange-400 text-white font-bold rounded-lg p-3 transition-colors duration-300 ease-linear"
+            onClick={() => {
+              setIsLoginWithEmail(true);
+            }}
+            className={clsx(
+              "w-1/2 bg-orange-300 hover:bg-orange-400 text-white font-bold rounded-lg p-3 transition-colors duration-300 ease-linear",
+              {
+                "bg-white border-2 border-orange-300 flex items-center justify-center hover:bg-white":
+                  isLoginWithEmail,
+              }
+            )}
           >
-            Login
+            {isLoginWithEmail ? (
+              <div className=" w-6 h-6 border-2 border-orange-400 border-t-0 animate-spin repeat-infinite rounded-full duration-500 " />
+            ) : (
+              <span>Login</span>
+            )}
           </button>
         </div>
       </div>
