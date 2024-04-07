@@ -9,20 +9,20 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider     = "mongodb"
+  url          = env("MONGODB_ATLAS_URI")
   relationMode = "prisma"
 }
 
 model User {
-  id        String   @id @default(cuid()) @map("_id")
-  userId    String   @unique
-  email     String   
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  history   SearchHistory[]
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  email         String          @unique
+  name          String
+  password      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  history       SearchHistory[]
+  emailVerified Boolean         @default(false)
 }
 
 model SearchHistory {
@@ -30,5 +30,5 @@ model SearchHistory {
   query     String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  userId    String   @db.ObjectId
 }

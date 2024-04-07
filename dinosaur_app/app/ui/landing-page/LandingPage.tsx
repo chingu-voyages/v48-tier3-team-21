@@ -7,6 +7,8 @@ import {
   getDecadesFromData,
   getDigSites,
 } from "@/app/lib/utils";
+import { Suspense } from "react";
+import Loading from "../Loading";
 
 const LandingPage = async () => {
   const dinoData = (await fetchDinoData()) || [];
