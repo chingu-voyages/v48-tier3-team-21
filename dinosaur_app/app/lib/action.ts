@@ -25,6 +25,7 @@ export async function authenticate(
     throw error;
   }
 }
+
 export async function new_signup(
   prevState: string | undefined,
   formData: FormData

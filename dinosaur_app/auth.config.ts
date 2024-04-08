@@ -1,16 +1,16 @@
 import type { NextAuthConfig } from "next-auth";
-import { signOut } from "./auth";
-import { createNewUserAccount, isUserRegistered } from "./app/lib/database";
-import { SignUpDataType } from "./app/lib/definitions";
-import { resolve } from "path";
+import { SearchHistoryInput } from "./app/lib/database";
+import { db } from "./lib/db";
 
 export const authConfig = {
   pages: {
     signIn: "/login",
+    error: "/login/error",
   },
   callbacks: {
     async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      const isUndefinedPath = nextUrl.pathname.startsWith("/undefined");
       const isOnDinoNews = nextUrl.pathname.startsWith("/dino-news");
       const isOnExploreDino = nextUrl.pathname.startsWith("/explore-dino");
       const isOnChartsTable = nextUrl.pathname.startsWith("/charts-table");
@@ -27,34 +27,43 @@ export const authConfig = {
         intendedURL !== null
       ) {
         if (isLoggedIn) return Response.redirect(new URL(intendedURL));
+      } else if (isUndefinedPath) {
+        return Response.redirect(new URL("/login/error", nextUrl));
       }
 
       // Logged in users are authenticated, otherwise redirect to login page
       return true;
     },
     async signIn({ account, profile }): Promise<any> {
-      if (account?.provider === "google" && profile?.email) {
-        try {
-          // const userExists = await isUserRegistered(profile?.email);
-          // if (!userExists) {
-          //   const signUpData: SignUpDataType = {
-          //     email: String(profile.email),
-          //     firstname: String(profile.given_name?.split(" ")[0]),
-          //     lastname: String(profile.family_name),
-          //     password: String("gmail"),
-          //   };
-          //   const confirmation = await createNewUserAccount(signUpData);
-          //   if (confirmation) {
-          //     return profile.email_verified;
-          //   }
-          // } else {
-          //   return profile?.email_verified;
-          // }
-        } catch (error) {
-          console.log("Failed to register new google user to db: ", error);
+      if (account?.provider === "google") {
+        if (profile?.email_verified) {
+          const result = await db.user.findUnique({
+            where: {
+              email: String(profile.email),
+            },
+          });
+
+          if (!result) {
+            const confirmation = await db.user.create({
+              data: {
+                email: String(profile.email),
+                name: String(profile.name),
+                password: null,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                history: { create: [] } as SearchHistoryInput,
+                emailVerified: profile.email_verified,
+              },
+            });
+            if (!confirmation) {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        } else {
           return false;
         }
-        return profile?.email_verified;
       }
       return true;
     },

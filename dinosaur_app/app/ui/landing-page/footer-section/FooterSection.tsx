@@ -140,8 +140,8 @@ const FooterSection = async () => {
               <Link href="/extras/privacy-policy" className="hover:underline">
                 Privacy Policy
               </Link>
-              <Link href="/extras/terms-conditions" className="hover:underline">
-                Terms & Conditions
+              <Link href="/extras/terms-of-use" className="hover:underline">
+                Terms of Use
               </Link>
               <span> &copy; {new Date().getFullYear()}</span>
             </div>
