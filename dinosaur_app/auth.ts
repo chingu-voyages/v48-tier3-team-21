@@ -8,7 +8,7 @@ import { db } from "@/app/lib/database";
 
 async function getUser(email: string): Promise<any> {
   try {
-    const user = db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email: email,
       },
