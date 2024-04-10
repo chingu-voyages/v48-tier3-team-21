@@ -50,7 +50,7 @@ const UserProfileButton = () => {
       <main className="relative">
         <div
           id="user-session-card"
-          className=" fixed right-1 top-24 bg-black text-white  rounded-lg bg-gradient-to-br from-black via-orange-300 to-orange-400 p-3 flex flex-col gap-2 transition-all duration-700 ease-in-out"
+          className=" fixed right-1 top-24 max-md:top-12 bg-black text-white  rounded-lg bg-gradient-to-br from-black via-orange-300 to-orange-400 p-3 flex flex-col gap-2 transition-all duration-700 ease-in-out"
         >
           <div className=" flex flex-row gap-3 items-center justify-center">
             {session.user?.image ? (
@@ -114,7 +114,7 @@ const UserProfileButton = () => {
               <hr className=" w-full" />
               <div className="w-full h-full flex md:flex-row flex-col md:gap-4 gap-2">
                 {/* profile infomation */}
-                <div className=" md:h-full md:w-1/4 w-full bg-black md:rounded-lg rounded-md p-2 flex md:flex-col flex-row items-center">
+                <div className=" md:h-full md:w-1/4 w-full bg-black md:rounded-lg rounded-md p-2 flex md:flex-col flex-row items-center max-md:gap-3">
                   <div className=" md:w-full flex md:flex-col items-center">
                     {session.user?.image ? (
                       <Image
@@ -122,10 +122,10 @@ const UserProfileButton = () => {
                         alt=""
                         width={1400}
                         height={1000}
-                        className=" w-48 h-48 rounded-full"
+                        className=" md:w-48 md:h-48 w-16 h-16 rounded-full"
                       />
                     ) : (
-                      <div className="w-48 h-48 rounded-full bg-white" />
+                      <div className="md:w-48 md:h-48 w-16 h-16 rounded-full bg-white" />
                     )}
                   </div>
 
@@ -136,7 +136,7 @@ const UserProfileButton = () => {
 
                 {/* search history */}
                 <div className="grow md:border-4 border-t-4 border-t-orange-400 md:border-t-0 md:border-r-0 md:border-l-orange-300 md:border-b-orange-400 md:rounded-md md:rounded-t-none md:rounded-r-none px-2">
-                  <span className="text-black text-2xl underline underline-offset-8">
+                  <span className="text-black text-2xl md:underline underline-offset-8">
                     Search History:
                   </span>
                 </div>

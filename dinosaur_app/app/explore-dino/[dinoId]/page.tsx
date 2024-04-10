@@ -30,9 +30,9 @@ const SingleDyno = async ({ params }: SingleDynoProps) => {
         <Image
           src={dino?.imageSrc === "N/A" ? dinoHeroImage : dino?.imageSrc}
           alt={dino?.name}
-          width={300}
-          height={300}
-          className="w-full h-[600px]"
+          width={1400}
+          height={1000}
+          className="w-full md:h-[600px]"
         />
         <div className="flex justify-between w-full mt-4  flex-col md:flex-row">
           <h1 className="text-orange-600 font-extrabold uppercase text-3xl">
