@@ -2,7 +2,7 @@
 
 import React, { useState,useEffect} from "react";
 
-import { Button } from "@/components/ui/button";
+
 import {
   Select,
   SelectContent,
@@ -55,7 +55,6 @@ const Filter = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>{placeholder}</SelectLabel>
           <SelectItem value="all">all</SelectItem>
           {filterValues?.map((option) => (
             <SelectItem key={option} value={option.toString()}>
