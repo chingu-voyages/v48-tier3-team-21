@@ -48,14 +48,14 @@ const Filter = ({
   return (
     <Select
       onValueChange={(value) => handleChange(value)}
-      defaultValue={searchParams.get(paramValue)?.toString()}
+      defaultValue={searchParams.get(paramValue)?.toString() || "all"}
     >
       <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="all">all</SelectItem>
+          <SelectItem value="all">{placeholder}</SelectItem>
           {filterValues?.map((option) => (
             <SelectItem key={option} value={option.toString()}>
               {option}

@@ -23,7 +23,7 @@ const SingleDyno = async ({ params }: SingleDynoProps) => {
 
   return (
     <main className="flex flex-col justify-center items-center mb-4 pt-6">
-      <div className="w-3/4 ">
+      <div className="w-3/4 mb-4">
         <BackButton />
       </div>
       <div className="w-3/4">

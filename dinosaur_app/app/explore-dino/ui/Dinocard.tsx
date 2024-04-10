@@ -41,7 +41,7 @@ const Dinocard = ({
   }, [searchParams]);
 
   return (
-    <Card className="w-[380px] h-[400px]" suppressHydrationWarning>
+    <Card className="w-[300px] lg:w-[380px] h-[400px]" suppressHydrationWarning>
       <CardHeader>
         <Image
           src={imageSrc === "N/A" ? dinoHeroImage : imageSrc}
@@ -50,11 +50,11 @@ const Dinocard = ({
           height={768}
           className="w-[380px] h-[100px]"
         />
-        <div className="flex justify-between items-center py-2">
+        <div className="flex justify-between flex-col lg:flex-row items-center py-2">
           <CardTitle className="text-orange-600 font-extrabold">
             {name}
           </CardTitle>
-          <CardDescription className="flex flex-row justify-center items-center gap-x-2">
+          <CardDescription className="flex flex-row justify-center items-center gap-x-2 mt-2 lg:mt-0">
             <MapPin className="text-red" />
             <span>{locationFilter}</span>
           </CardDescription>

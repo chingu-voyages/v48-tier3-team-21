@@ -17,8 +17,8 @@ const RemoveFilter = () => {
     const keys = Array.from(params.keys());
     keys.forEach((key) => params.delete(key));
 
+  
     router.replace(`${pathname}?${params.toString()}`);
-    window.location.reload();
   };
   return (
     <TooltipProvider>
