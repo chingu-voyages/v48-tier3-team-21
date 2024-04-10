@@ -1,11 +1,11 @@
 import { dinoDescription } from "@/app/lib/constants";
-import { DinoDataType } from "@/app/lib/definitions";
 import { getDinoById } from "@/app/lib/utils";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import dinoHeroImage from "@/public/landing-page/dinosaur-background-image.jpg";
 import { redirect } from "next/navigation";
+import BackButton from "../ui/BackButton";
 
 interface SingleDynoProps {
   params: {
@@ -22,7 +22,10 @@ const SingleDyno = async ({ params }: SingleDynoProps) => {
   const dino: any = await getDinoById(Number(dinoId));
 
   return (
-    <main className="flex flex-col justify-center items-center mb-4">
+    <main className="flex flex-col justify-center items-center mb-4 pt-6">
+      <div className="w-3/4 ">
+        <BackButton />
+      </div>
       <div className="w-3/4">
         <Image
           src={dino?.imageSrc === "N/A" ? dinoHeroImage : dino?.imageSrc}
