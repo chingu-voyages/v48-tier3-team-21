@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState,useEffect} from "react";
-
+import React, { useState, useEffect } from "react";
 
 import {
   Select,
@@ -38,11 +37,10 @@ const Filter = ({
     replace(`${pathname}?${params.toString()}`);
   };
   useEffect(() => {
-     ( async () => {
+    (async () => {
       const values = await filterOptions();
       setFilterValues(values);
-     })();
-    ;
+    })();
   }, []);
 
   return (
