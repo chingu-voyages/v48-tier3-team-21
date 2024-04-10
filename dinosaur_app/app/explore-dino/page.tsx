@@ -4,7 +4,12 @@ import React, { useEffect, useState } from "react";
 import { DinoDataType } from "../lib/definitions";
 import Dinocard from "./ui/Dinocard";
 
-import { getAllDinousars, getDinoDietsforFilter, getDinoLengthsforFilter, getDinoWeightsforFilter } from "../lib/utils";
+import {
+  getAllDinousars,
+  getDinoDietsforFilter,
+  getDinoLengthsforFilter,
+  getDinoWeightsforFilter,
+} from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
 import Filter from "./ui/Filter";
@@ -57,12 +62,14 @@ const ExploreDino = ({
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
       <div className="flex flex-col items-center justify-center lg:flex-row gap-x-4">
         <SearchBar />
-        <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
-          {<Filter
-            placeholder="Countries"
-            filterOptions={getDinoLocationsforFilter}
-            paramValue="foundIn"
-          />}
+        <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 lg:mt-0 ">
+          {
+            <Filter
+              placeholder="Countries"
+              filterOptions={getDinoLocationsforFilter}
+              paramValue="foundIn"
+            />
+          }
           <Filter
             placeholder="Diet"
             filterOptions={getDinoDietsforFilter}
@@ -79,7 +86,21 @@ const ExploreDino = ({
             paramValue="weight"
           />
         </div>
-        <RemoveFilter/>
+        <div className="max-lg:mt-2 max-lg:self-start max-lg:pl-2">
+          <RemoveFilter />
+        </div>
+      </div>
+      <div className="text-orange-600 text-2xl lg:self-start lg:pl-[6rem]">
+        {loading ? (
+          "Discovering..."
+        ) : (
+          <>
+            {" "}
+            Discovered
+            <span className="font-extrabold mx-2">{dinausors?.length}</span>
+            Dinosaurs
+          </>
+        )}
       </div>
       <div
         className={
