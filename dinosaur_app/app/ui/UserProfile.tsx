@@ -129,9 +129,26 @@ const UserProfileButton = () => {
                     )}
                   </div>
 
-                  <span className=" w-full md:mt-5 text-xl text-start text-white">
-                    {session.user?.name}
-                  </span>
+                  <div className=" mt-5 md:w-full flex flex-col md:gap-3">
+                    <label htmlFor="session-username" className="flex flex-col">
+                      <span className="text-xs text-gray-400">Name:</span>
+                      <span
+                        id="session-username"
+                        className=" w-full max-md:-mt-2 text-xl text-start text-white"
+                      >
+                        {session.user?.name}
+                      </span>
+                    </label>
+                    <label htmlFor="session-email" className="flex flex-col">
+                      <span className="text-xs text-gray-400">Email:</span>
+                      <span
+                        id="session-email"
+                        className=" w-full max-md:-mt-2 text-xl text-start text-white"
+                      >
+                        {session.user?.email}
+                      </span>
+                    </label>
+                  </div>
                 </div>
 
                 {/* search history */}
