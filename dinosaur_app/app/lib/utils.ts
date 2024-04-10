@@ -2,6 +2,8 @@
 
 import { unstable_noStore } from "next/cache";
 import { ConvertedLocations, DinoDataType, geoLocation } from "./definitions";
+import { auth } from "@/auth";
+import { db } from "./database";
 
 const getPastDate = (pastDays: number) => {
   const currentDate = new Date();
@@ -114,13 +116,16 @@ export const getAllDinousars = async ({
   diet,
   length,
   weight,
+  decade,
 }: {
   name?: string;
   foundIn?: string;
   diet?: string;
   length?: string;
   weight?: string;
+  decade?: string;
 }) => {
+  unstable_noStore();
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
     const resp = await fetch(url);
@@ -175,15 +180,77 @@ export const getAllDinousars = async ({
         );
       }
     }
-    if (!name && !foundIn && !diet && !length && !weight) {
+    if (decade) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) =>
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) >= Number(decade.slice(0, 4)) &&
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) <
+              Number(decade.slice(0, 4)) + 10
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) =>
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) >= Number(decade.slice(0, 4)) &&
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) <
+              Number(decade.slice(0, 4)) + 10
+        );
+      }
+    }
+    if (!name && !foundIn && !diet && !length && !weight && !decade) {
       return dinosaurs;
     }
+
     return filteredDinos;
   } catch (error) {
     console.log("Failed to fetch dinausors: ", error);
     return [];
   }
 };
+
+async function saveSearchResults(url: string) {
+  // seek userid;
+  const session = await auth();
+
+  if (session?.user?.email) {
+    const userData = await db.user.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    });
+
+    if (userData) {
+      const userId = userData.id;
+
+      // pack data for saving in db;
+      const searchItem = {
+        query: url,
+        userId,
+      };
+
+      // save data to db;
+      const confirmation = await db.searchHistory.create({
+        data: {
+          ...searchItem,
+        },
+      });
+
+      if (confirmation) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
   try {

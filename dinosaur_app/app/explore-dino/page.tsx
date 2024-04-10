@@ -27,15 +27,17 @@ const ExploreDino = ({
     diet: string;
     length: string;
     weight: string;
+    decade?: string;
   };
 }) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
   const [loading, setLoading] = useState(false);
-  const name = searchParams?.name || "";
-  const foundIn = searchParams?.foundIn || "";
-  const diet = searchParams?.diet || "";
-  const length = searchParams?.length || "";
-  const weight = searchParams?.weight || "";
+  const name = searchParams?.name ?? "";
+  const foundIn = searchParams?.foundIn ?? "";
+  const diet = searchParams?.diet ?? "";
+  const length = searchParams?.length ?? "";
+  const weight = searchParams?.weight ?? "";
+  const decade = searchParams?.decade ?? "";
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
@@ -47,6 +49,7 @@ const ExploreDino = ({
           diet,
           length,
           weight,
+          decade,
         });
         setDinousars(dinausors);
       } catch (error) {
@@ -56,7 +59,7 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name, foundIn, diet, length, weight]);
+  }, [name, foundIn, diet, length, weight, decade]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
