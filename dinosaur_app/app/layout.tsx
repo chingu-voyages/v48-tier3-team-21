@@ -5,6 +5,7 @@ import "./ui/globals.css";
 import MainHeader from "./ui/MainHeader";
 import FooterSection from "./ui/landing-page/footer-section/FooterSection";
 import Provider from "./ui/next-auth-client/Provider";
+import RandomFactPopUp from "./ui/RandomFactPopUp";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         <Provider>
           <MainHeader />
+          <RandomFactPopUp />
           {children}
           <FooterSection />
         </Provider>

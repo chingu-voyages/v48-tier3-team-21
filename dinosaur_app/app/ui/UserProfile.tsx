@@ -114,7 +114,7 @@ const UserProfileButton = () => {
               <hr className=" w-full" />
               <div className="w-full h-full flex md:flex-row flex-col md:gap-4 gap-2">
                 {/* profile infomation */}
-                <div className=" md:h-full md:w-1/4 w-full bg-black md:rounded-lg rounded-md p-2 flex md:flex-col flex-row items-center max-md:gap-3">
+                <div className=" overflow-hidden md:h-full md:w-1/4 w-full bg-black md:rounded-lg rounded-md p-2 flex md:flex-col flex-row items-center max-md:gap-3">
                   <div className=" md:w-full flex md:flex-col items-center">
                     {session.user?.image ? (
                       <Image
@@ -134,7 +134,7 @@ const UserProfileButton = () => {
                       <span className="text-xs text-gray-400">Name:</span>
                       <span
                         id="session-username"
-                        className=" w-full max-md:-mt-2 text-xl text-start text-white"
+                        className=" w-full max-md:-mt-2 text-md text-start text-white"
                       >
                         {session.user?.name}
                       </span>
@@ -143,7 +143,7 @@ const UserProfileButton = () => {
                       <span className="text-xs text-gray-400">Email:</span>
                       <span
                         id="session-email"
-                        className=" w-full max-md:-mt-2 text-xl text-start text-white"
+                        className=" w-full max-md:-mt-2 text-sm text-start text-white"
                       >
                         {session.user?.email}
                       </span>

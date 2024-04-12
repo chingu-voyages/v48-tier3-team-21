@@ -11,13 +11,11 @@ import { useFormState } from "react-dom";
 import { authenticate } from "@/app/lib/action";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 export default function LoginForm({
   isSignUp,
   setIsSignUp,
 }: Readonly<{ isSignUp: boolean; setIsSignUp: (val: boolean) => void }>) {
-  const router = useRouter();
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
   const [requestPassword, setRequestPassword] = useState(false);
   const [editEmail, setEditEmail] = useState(true);
@@ -132,6 +130,7 @@ export default function LoginForm({
             <hr className="w-1/2" />
           </span>
           <button
+            type="button"
             disabled={isLogginWithGoogle}
             onClick={() => {
               setIsLogginWithGoogle(true);
