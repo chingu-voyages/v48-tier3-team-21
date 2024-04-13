@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
 import dinoIcon from "@/public/dino_icon.svg";
-import { resolveObjectURL } from "buffer";
+import { fileURLToPath, pathToFileURL } from "url";
+import { getURL } from "next/dist/shared/lib/utils";
 import { url } from "inspector";
 
 type ImageProps = {
@@ -27,11 +28,11 @@ const ImageWithFallback = ({
       alt={alt}
       width={width}
       height={height}
-      onError={(e) => {
-        // if (!e.currentTarget.complete) {
-        e.currentTarget.src = dinoIcon;
-        // }
-      }}
+      // onError={(e) => {
+      //   if (!e.currentTarget.naturalWidth) {
+      //     e.currentTarget.srcset = dinoIcon;
+      //   }
+      // }}
       loading={loading}
       className={`${moreStyles} shrink-0`}
     />

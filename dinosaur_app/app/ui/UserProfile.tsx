@@ -3,13 +3,24 @@ import clsx from "clsx";
 import { LogOutIcon, User2Icon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useContext } from "react";
+import SearchHistoryItem from "./SearchHistoryItem";
+import Link from "next/link";
+import Loading from "./Loading";
+import { AppContext } from "./AppContext";
 
 const UserProfileButton = () => {
   const { data: session, status } = useSession();
   const [isSessionCardOpen, setIsSessionCardOpen] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[] | null>(null);
+  const [deleteInProgress, setDeleteInProgress] = useState(false);
+  const [searchUnderDelete, setSearchUnderDelete] = useState<string | null>(
+    null
+  );
+  const { refreshSearchHistoryView, setRefreshSearchHistoryView } =
+    useContext(AppContext);
 
   useEffect(() => {
     const sessionCard = document.getElementById(
@@ -44,6 +55,68 @@ const UserProfileButton = () => {
       }
     };
   }, [isSessionCardOpen, status]);
+
+  useEffect(() => {
+    async function getHistory() {
+      try {
+        const url = "/api/user/get-history";
+        const response = await fetch(url);
+
+        if (response.status === 200) {
+          const data = await response.json();
+          const searchHistory = data.userSearchHistory;
+          if (searchHistory) {
+            setRefreshSearchHistoryView(false);
+            setSearchHistory(searchHistory);
+          } else {
+            setSearchHistory(null);
+          }
+        }
+      } catch (error) {
+        console.log("Failed to get User Search History: ", error);
+      }
+    }
+
+    if (status === "authenticated" || refreshSearchHistoryView) {
+      getHistory();
+    }
+  }, [refreshSearchHistoryView, setRefreshSearchHistoryView, status]);
+
+  const handleRemoveSearchHistory = async (
+    search: string,
+    all: boolean = false
+  ) => {
+    try {
+      if (status === "authenticated" && session !== null) {
+        const url = "/api/user/delete-history";
+
+        const response = await fetch(url, {
+          method: "DELETE",
+          body: all
+            ? JSON.stringify({
+                user_email: session.user?.email,
+                delete_all: true,
+              })
+            : JSON.stringify({
+                user_email: session.user?.email,
+                delete_all: false,
+                specified_history: search,
+              }),
+        });
+
+        setDeleteInProgress(false);
+        if (response.status === 202) {
+          setRefreshSearchHistoryView(true);
+          alert("Delete success");
+        } else if (response.status === 500) {
+          alert("Error: Failed to Delete Specified Search History!");
+        }
+      }
+    } catch (error) {
+      console.log("Failed to remove search: ", error);
+      alert("Error: Resolve your internet connection to continue");
+    }
+  };
 
   if (status === "authenticated") {
     return (
@@ -112,9 +185,9 @@ const UserProfileButton = () => {
                 <span className="-mt-2">x</span>
               </button>
               <hr className=" w-full" />
-              <div className="w-full h-full flex md:flex-row flex-col md:gap-4 gap-2">
+              <div className="w-full md:h-full flex md:flex-row flex-col md:gap-4 gap-2 overflow-hidden overflow-y-auto max-md:mb-10">
                 {/* profile infomation */}
-                <div className=" overflow-hidden md:h-full md:w-1/4 w-full bg-black md:rounded-lg rounded-md p-2 flex md:flex-col flex-row items-center max-md:gap-3">
+                <div className=" overflow-hidden md:h-full h-[30vh] md:w-1/4 w-full bg-black md:rounded-lg rounded-md p-2 flex md:flex-col flex-row items-center max-md:gap-3">
                   <div className=" md:w-full flex md:flex-col items-center">
                     {session.user?.image ? (
                       <Image
@@ -152,10 +225,73 @@ const UserProfileButton = () => {
                 </div>
 
                 {/* search history */}
-                <div className="grow md:border-4 border-t-4 border-t-orange-400 md:border-t-0 md:border-r-0 md:border-l-orange-300 md:border-b-orange-400 md:rounded-md md:rounded-t-none md:rounded-r-none px-2">
-                  <span className="text-black text-2xl md:underline underline-offset-8">
-                    Search History:
-                  </span>
+                <div className="grow md:border-4 border-t-4 border-t-orange-400 md:border-t-0 md:border-r-0 md:border-l-orange-300 md:border-b-orange-400 md:rounded-md md:rounded-t-none md:rounded-r-none px-2 overflow-hidden overflow-y-auto">
+                  <div className="flex flex-row items-center justify-between sticky top-0 bg-white py-2">
+                    <span className="text-black sm:text-2xl text-sm md:underline underline-offset-8">
+                      Search History:
+                    </span>
+                    <button
+                      type="button"
+                      disabled={!searchHistory || searchHistory.length < 2}
+                      onClick={() => {
+                        setDeleteInProgress(true);
+                        handleRemoveSearchHistory("", true);
+                      }}
+                      className={clsx(
+                        " bg-red-500 text-white p-2 text-xs rounded-sm font-bold transition-colors duration-300 ease-linear",
+                        {
+                          " opacity-55 ":
+                            !searchHistory || searchHistory.length < 2,
+                          "hover:bg-red-400":
+                            searchHistory && searchHistory.length >= 2,
+                        }
+                      )}
+                    >
+                      {deleteInProgress ? (
+                        <div className=" w-3 h-3 border-2 border-white border-t-0 border-l-0 border-r-0 animate-spin duration-500 repeat-infinite rounded-full" />
+                      ) : (
+                        <span>Delete All</span>
+                      )}
+                    </button>
+                  </div>
+                  <Suspense fallback={<Loading />}>
+                    <div className=" flex flex-col gap-2 p-1 px-2 mt-2">
+                      {searchHistory !== null &&
+                        searchHistory.map((search) => (
+                          <div
+                            key={search}
+                            className=" bg-slate-300 md:text-xl p-1 py-3 rounded-md flex flex-row gap-2 items-center justify-between"
+                          >
+                            <SearchHistoryItem searchRelatedURL={search} />
+                            <div className=" flex flex-row gap-2 items-center">
+                              <Link
+                                href={search}
+                                target="_blank"
+                                className=" text-white p-2 text-xs rounded-sm bg-orange-300 hover:bg-orange-400 "
+                              >
+                                View
+                              </Link>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSearchUnderDelete(search);
+                                  setDeleteInProgress(true);
+                                  handleRemoveSearchHistory(search);
+                                }}
+                                className=" bg-red-500 hover:bg-red-400 text-white p-2 text-xs rounded-sm font-bold transition-colors duration-300 ease-linear"
+                              >
+                                {deleteInProgress &&
+                                searchUnderDelete === search ? (
+                                  <div className=" w-3 h-3 border-2 border-white border-t-0 border-l-0 border-r-0 animate-spin duration-500 repeat-infinite rounded-full" />
+                                ) : (
+                                  <span>Delete</span>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </Suspense>
                 </div>
               </div>
             </section>

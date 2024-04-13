@@ -117,6 +117,7 @@ export const getAllDinousars = async ({
   length,
   weight,
   decade,
+  currentURL,
 }: {
   name?: string;
   foundIn?: string;
@@ -124,6 +125,7 @@ export const getAllDinousars = async ({
   length?: string;
   weight?: string;
   decade?: string;
+  currentURL: string;
 }) => {
   unstable_noStore();
   try {
@@ -209,7 +211,15 @@ export const getAllDinousars = async ({
       return dinosaurs;
     }
 
-    return filteredDinos;
+    if (filteredDinos.length) {
+      //save to db;
+      const confirmed = await saveSearchResults(currentURL);
+
+      if (confirmed) {
+        return filteredDinos;
+      }
+    }
+    return [];
   } catch (error) {
     console.log("Failed to fetch dinausors: ", error);
     return [];
@@ -218,38 +228,43 @@ export const getAllDinousars = async ({
 
 async function saveSearchResults(url: string) {
   // seek userid;
-  const session = await auth();
+  try {
+    const session = await auth();
 
-  if (session?.user?.email) {
-    const userData = await db.user.findUnique({
-      where: {
-        email: session.user.email,
-      },
-    });
-
-    if (userData) {
-      const userId = userData.id;
-
-      // pack data for saving in db;
-      const searchItem = {
-        query: url,
-        userId,
-      };
-
-      // save data to db;
-      const confirmation = await db.searchHistory.create({
-        data: {
-          ...searchItem,
+    if (session?.user?.email) {
+      const userData = await db.user.findUnique({
+        where: {
+          email: session.user.email,
         },
       });
 
-      if (confirmation) {
-        return true;
+      if (userData) {
+        const userId = userData.id;
+
+        // pack data for saving in db;
+        const searchItem = {
+          query: url,
+          userId,
+        };
+
+        // save data to db;
+        const confirmation = await db.searchHistory.create({
+          data: {
+            ...searchItem,
+          },
+        });
+
+        if (confirmation) {
+          return true;
+        }
       }
     }
-  }
 
-  return false;
+    return false;
+  } catch (error) {
+    console.log("Failed to save search to DB: ", error);
+    return false;
+  }
 }
 
 export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
@@ -408,4 +423,111 @@ export async function getDecadesFromData(dinosaurs: DinoDataType[]) {
     publicationYears.map((year) => year && Math.floor(year / 10))
   );
   return Array.from(uniqueDecades).sort() as number[];
+}
+
+export async function getUserSearchHistory(email: string) {
+  unstable_noStore();
+  try {
+    const result = await db.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!result?.id) {
+      return null;
+    }
+
+    const id = result.id;
+
+    const dbResult = await db.searchHistory.findMany({
+      where: {
+        userId: id,
+      },
+    });
+
+    if (dbResult) {
+      const uniqueSearchHistory = new Map();
+
+      dbResult.forEach((obj) => {
+        if (!uniqueSearchHistory.has(obj.query)) {
+          uniqueSearchHistory.set(obj.query, obj.query);
+        }
+      });
+
+      const uniqueArr: string[] = [];
+      uniqueSearchHistory.forEach((value) => {
+        uniqueArr.push(value);
+      });
+
+      if (uniqueArr.length) {
+        return uniqueArr;
+      } else return null;
+    } else return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteSearchHistory(reqData: {
+  user_email: string;
+  delete_all: boolean;
+  specified_history?: string;
+}) {
+  try {
+    if (reqData.delete_all) {
+      const result = await db.user.findUnique({
+        where: {
+          email: reqData.user_email,
+        },
+      });
+
+      if (!result) {
+        throw new Error(
+          `Failed to get user specified with email: ${reqData.user_email}`
+        );
+      }
+
+      const user_id = result.id;
+
+      const confirmation = await db.searchHistory.deleteMany({
+        where: {
+          userId: user_id,
+        },
+      });
+
+      if (confirmation.count) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (!reqData.delete_all && reqData.specified_history) {
+      const result = await db.user.findUnique({
+        where: {
+          email: reqData.user_email,
+        },
+      });
+
+      if (!result) {
+        throw new Error(
+          `Failed to get user specified with email: ${reqData.user_email}`
+        );
+      }
+
+      const user_id = result.id;
+
+      const confirmation = await db.searchHistory.deleteMany({
+        where: {
+          AND: [{ userId: user_id }, { query: reqData.specified_history }],
+        },
+      });
+
+      if (confirmation.count) {
+        return true;
+      } else return false;
+    }
+  } catch (error) {
+    console.log("Error Delete at search history: ", error);
+    throw error;
+  }
 }
