@@ -66,7 +66,12 @@ Welcome to our dino world, where we bring dinosaurs back to life! Our app is lik
 
 ## Acknowledgements
 
-We acknowledge the [National History Museum](https://www.nhm.ac.uk) for providing access to the dataset containing valuable information about dinosaurs. Additionally, we thank [NewsAPI](https://www.newsapi.org) for delivering the latest news on dinosaur discoveries, contributing to our ongoing exploration of this fascinating field.
+- We extend our heartfelt gratitude to [Chingu](https://www.chingu.io/) for providing us with the invaluable opportunity to collaborate on this project with wonderful developers from around the world. 
+- We acknowledge the [National History Museum](https://www.nhm.ac.uk) for providing access to the dataset containing valuable information about dinosaurs. Additionally, we thank [NewsAPI](https://www.newsapi.org) for delivering the latest news on dinosaur discoveries, contributing to our ongoing exploration of this fascinating field.
+
+## About Chingu 
+
+Chingu is an online platform where developers collaborate on real-world projects. Through voyages and mentorship, developers gain practical skills of working in a team and building a project. It's a vibrant community fostering collaboration and growth for developers worldwide
 
 ## Our Team
 
