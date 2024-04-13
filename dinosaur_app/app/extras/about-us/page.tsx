@@ -5,6 +5,11 @@ import Image from "next/image";
 import { Suspense } from "react";
 import githubIcon from "@/public/github-icon/github-mark/github-mark.svg";
 import websiteIcon from "@/public/web-icon.png";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us",
+};
 
 const AboutUsPage = () => {
   return (

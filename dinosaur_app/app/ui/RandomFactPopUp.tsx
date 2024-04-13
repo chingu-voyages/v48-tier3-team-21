@@ -19,7 +19,6 @@ const RandomFactPopUp = () => {
   }, [hasShown]);
   return (
     <main
-      style={{ zIndex: 999 }}
       className={clsx(
         " absolute inset-0 bg-gray-700 bg-opacity-45 flex items-center justify-center h-screen w-full cursor-default",
         {

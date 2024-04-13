@@ -10,24 +10,6 @@ export const developers = [
       "Telecommunication and information Engineer. Web-frontends and backends, Network design and administration, embedded systems design, CAD (Autodesk Fusion 360). See my website for more awesome projects...",
   },
   {
-    name: "Shivam",
-    avatar: "https://avatars.githubusercontent.com/u/91086992?v=4",
-    github: "https://github.com/shivam24161",
-    linked_in: "https://linkedin.com/in/shivam",
-    website: "https://github.com/shivam24161",
-    role: "web developer",
-    description: "Shivam has not added a description.",
-  },
-  {
-    name: "Tanisha",
-    avatar: "",
-    github: "",
-    linked_in: "https://linkedin.com/in/tanisha",
-    website: "https://",
-    role: "UI/UX designer",
-    description: "Tanisha has not added a description",
-  },
-  {
     name: "Arman Jena",
     avatar: "https://avatars.githubusercontent.com/u/112967686?v=4",
     github: "https://github.com/Ajen07",
@@ -45,6 +27,24 @@ export const developers = [
     role: "web developer",
     description:
       "I bring 10 years of diverse experience in the software industry. I'm an effective problem solver, engineer, and mentor delivering solutions building full-stack web and microservices architecture based applications. I enjoy mentoring developers and teams on Test Driven Development (TDD) and Pair Programming. ",
+  },
+  {
+    name: "Shivam",
+    avatar: "https://avatars.githubusercontent.com/u/91086992?v=4",
+    github: "https://github.com/shivam24161",
+    linked_in: "https://linkedin.com/in/shivam",
+    website: "https://github.com/shivam24161",
+    role: "web developer",
+    description: "Shivam has not added a description.",
+  },
+  {
+    name: "Tanisha",
+    avatar: "",
+    github: "",
+    linked_in: "https://linkedin.com/in/tanisha",
+    website: "https://",
+    role: "UI/UX designer",
+    description: "Tanisha has not added a description",
   },
 ];
 
