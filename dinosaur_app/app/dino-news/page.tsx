@@ -3,6 +3,11 @@ import { fetchLatestNews, formatDate } from "../lib/utils";
 import Image from "next/image";
 import { Suspense } from "react";
 import PageLoading from "../ui/PageLoading";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dino News",
+};
 
 const DinoNewsPage = async () => {
   const dinoNews = await fetchLatestNews();
