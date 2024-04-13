@@ -77,7 +77,7 @@ Chingu is an online platform where developers collaborate on real-world projects
 
 ## Our Team
 
-- Jack Weru #1: [GitHub](https://github.com/Jaweki) / [LinkedIn](https://linkedin.com/in/ljaweki-dekut)
+- Jack Weru #1: [GitHub](https://github.com/Jaweki) / [LinkedIn](https://linkedin.com/in/jaweki-dekut)
 - Arman Kumar Jena #2: [GitHub](https://github.com/Ajen07) / [LinkedIn](https://www.linkedin.com/in/arman-kumar-jena-9b6a9322a)
 - Shivam #3: [GitHub](https://github.com/shivam24161) / [LinkedIn](https://linkedin.com/in/liaccountname)
 - Shant Dashjian #4: [GitHub](https://github.com/shantdashjian) / [LinkedIn](https://www.linkedin.com/in/shantdashjian)
