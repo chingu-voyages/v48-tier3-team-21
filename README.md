@@ -1,42 +1,76 @@
-# voyage-tasks
+<h1 style="color:orange;font-size:3rem"><a href="https://digging-into-dinosaurs.vercel.app/" style="color:orange">Digging into Dinosaurs</a></h1>
 
-Your project's `readme` is as important to success as your code. For
-this reason you should put as much care into its creation and maintenance
-as you would any other component of the application.
+## Overview
 
-If you are unsure of what should go into the `readme` let this article,
-written by an experienced Chingu, be your starting point -
-[Keys to a well written README](https://tinyurl.com/yk3wubft).
+Welcome to our dino world, where we bring dinosaurs back to life! Our app is like a virtual dino world, where you can explore various types of dinosaurs from different eras and regions.We've curated a collection of fascinating information about these ancient creatures.Step into our virtual dino world, a realm teeming with the majestic creatures that once ruled the Earth. Powered by meticulous data sourced from the renowned <a href="https://www.nhm.ac.uk/discover/dinosaurs.html" style="color:orange">National History Museum</a>, this app offers an immersive experience like no other, inviting you to embark on a thrilling journey of discovery through the depths of time.
 
-And before we go there's "one more thing"! Once you decide what to include
-in your `readme` feel free to replace the text we've provided here.
+<h3 style="font-size:2rem">Your entry into our Dino world</h3>
+<img src="./dinosaur_app/public/readme-images/readme-hero-image.png"/>
 
-> Own it & Make it your Own!
+<br>
+<br>
 
-## Team Documents
+# Features of our App
 
-You may find these helpful as you work together to organize your project.
+- <b>User Authentication</b>
 
-- [Team Project Ideas](./docs/team_project_ideas.md)
-- [Team Decision Log](./docs/team_decision_log.md)
+  - Users should authenticate themselves before digging into the world of dinosaurs.
+  - Authentication system is built using <a style="color:orange"> NextAuth</a>
+  - Email verification of the user using a verification email using
+    nodemailer
 
-Meeting Agenda templates (located in the `/docs` directory in this repo):
+    <img src="./dinosaur_app/public/readme-images/auth-image.png" width="400" height="400"/>
 
-- Meeting - Voyage Kickoff --> ./docs/meeting-voyage_kickoff.docx
-- Meeting - App Vision & Feature Planning --> ./docs/meeting-vision_and_feature_planning.docx
-- Meeting - Sprint Retrospective, Review, and Planning --> ./docs/meeting-sprint_retrospective_review_and_planning.docx
-- Meeting - Sprint Open Topic Session --> ./docs/meeting-sprint_open_topic_session.docx
+
+- <b>Search Functionality</b>
+
+  - Users can search for dinosaurs by name, weight, length, country and diet.
+
+   <img src="./dinosaur_app/public/readme-images/search-functionality-img.png" width="400"/>
+
+- <b>Diet Chart Visualization</b>
+
+  - Our App displas two charts (pie chart and doughnut chart) illustrating the distribution of general dinosaur diets (e.g., herbivore, carnivore, omnivore) and type based on provided data.
+  - The charts accurately represent the proportion of each diet type within the dataset.
+
+    <img src="./dinosaur_app/public/readme-images/chart-img.png" width="400"/>
+
+- <b>Dinosaur Details View</b>
+
+  - Users can view full details of the selected dinosaur.
+  - Dinosaur details include notable characteristics sourced from the <a href="https://chinguapi.onrender.com/dinosaurs" style="color:orange">Dinosaurs API</a>.
+
+  <img src="./dinosaur_app/public/readme-images/dino-info-page-img.png" width="400" /><img src="" width="400"/>
+
+- <b>Dinosaur news and discovery</b>
+
+  - Users will be able to find and read the latest news and discoveries about dinosaurs with the help of <a href="https://newsapi.org/" style="color:orange" >NewsAPI</a> .
+
+    <img src="./dinosaur_app/public/readme-images/all-news-img.png" width="400" />
+
+- <b>Dinosaur over the Map</b>
+
+  - Users will be able to locate the different dinosaurs over different regions using our interactive map built using <a href="https://www.mapbox.com/" style="color:orange">Mapbox Api</a>.
+  - User can also filter the dinosaurs on the basis of decades they are found.
+
+    <img src="./dinosaur_app/public/readme-images/dino-map-img.png" width="400" />
+
+## Tech Stack Used
+
+- Nextjs
+- Prisma
+- MongoDB
+- ShadcnUi (UI component library)
+- Zod (For validation)
+- Mapbox (For interactive maps)
+
+## Acknowledgements
+
+We acknowledge the [National History Museum](https://www.nhm.ac.uk) for providing access to the dataset containing valuable information about dinosaurs. Additionally, we thank [NewsAPI](https://www.newsapi.org) for delivering the latest news on dinosaur discoveries, contributing to our ongoing exploration of this fascinating field.
 
 ## Our Team
 
-Everyone on your team should add their name along with a link to their GitHub
-& optionally their LinkedIn profiles below. Do this in Sprint #1 to validate
-your repo access and to practice PR'ing with your team _before_ you start
-coding!
-
 - Jack Weru #1: [GitHub](https://github.com/Jaweki) / [LinkedIn](https://linkedin.com/in/ljaweki-dekut)
-- Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
-
-  ...
-
-- Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Arman Kumar Jena #2: [GitHub](https://github.com/Ajen07) / [LinkedIn](https://www.linkedin.com/in/arman-kumar-jena-9b6a9322a)
+- Shivam #3: [GitHub](https://github.com/shivam24161) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Shant Dashjian #4: [GitHub](https://github.com/shantdashjian) / [LinkedIn](https://www.linkedin.com/in/shantdashjian)
