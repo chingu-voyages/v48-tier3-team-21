@@ -58,6 +58,8 @@ Welcome to our dino world, where we bring dinosaurs back to life! Our app is lik
 ## Tech Stack Used
 
 - Nextjs
+- NextAuth.js
+- Chart.js
 - Prisma
 - MongoDB
 - ShadcnUi (UI component library)
