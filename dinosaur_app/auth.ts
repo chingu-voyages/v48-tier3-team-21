@@ -56,6 +56,7 @@ export const {
 
           if (passwordsMatch) {
             const authenticatedUser = {
+              id: user.id,
               name: user.name,
               email: user.email,
               image: null,

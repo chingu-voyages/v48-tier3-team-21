@@ -5,6 +5,7 @@ import "./ui/globals.css";
 import MainHeader from "./ui/MainHeader";
 import FooterSection from "./ui/landing-page/footer-section/FooterSection";
 import Provider from "./ui/next-auth-client/Provider";
+import AppContextProvider from "./ui/AppContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,10 +28,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className}`}>
         <Provider>
-          <MainHeader />
-
-          {children}
-          <FooterSection />
+          <AppContextProvider>
+            <MainHeader />
+            {children}
+            <FooterSection />
+          </AppContextProvider>
         </Provider>
       </body>
     </html>

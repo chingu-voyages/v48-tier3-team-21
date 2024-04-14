@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DinoDataType } from "../lib/definitions";
 import Dinocard from "./ui/Dinocard";
 
@@ -17,6 +17,7 @@ import Filter from "./ui/Filter";
 import RemoveFilter from "./ui/RemoveFilter";
 import { getDinoLocationsforFilter } from "../lib/utils";
 import PageLoading from "../ui/PageLoading";
+import { AppContext } from "../ui/AppContext";
 
 const ExploreDino = ({
   searchParams,
@@ -38,11 +39,13 @@ const ExploreDino = ({
   const length = searchParams?.length ?? "";
   const weight = searchParams?.weight ?? "";
   const decade = searchParams?.decade ?? "";
+  const { setRefreshSearchHistoryView } = useContext(AppContext);
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
       setLoading(true);
       try {
+        const currentURL = window.location.href;
         const dinausors = await getAllDinousars({
           name,
           foundIn,
@@ -50,8 +53,11 @@ const ExploreDino = ({
           length,
           weight,
           decade,
+          currentURL,
         });
+
         setDinousars(dinausors);
+        setRefreshSearchHistoryView(true);
       } catch (error) {
         console.log("Failed to fetch dinausors: ", error);
       } finally {
