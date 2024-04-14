@@ -2,6 +2,8 @@
 
 import { unstable_noStore } from "next/cache";
 import { ConvertedLocations, DinoDataType, geoLocation } from "./definitions";
+import { auth } from "@/auth";
+import { db } from "./database";
 
 const getPastDate = (pastDays: number) => {
   const currentDate = new Date();
@@ -114,13 +116,18 @@ export const getAllDinousars = async ({
   diet,
   length,
   weight,
+  decade,
+  currentURL,
 }: {
   name?: string;
   foundIn?: string;
   diet?: string;
   length?: string;
   weight?: string;
+  decade?: string;
+  currentURL: string;
 }) => {
+  unstable_noStore();
   try {
     const url = "https://chinguapi.onrender.com/dinosaurs";
     const resp = await fetch(url);
@@ -175,15 +182,90 @@ export const getAllDinousars = async ({
         );
       }
     }
-    if (!name && !foundIn && !diet && !length && !weight) {
+    if (decade) {
+      if (filteredDinos.length > 0) {
+        filteredDinos = filteredDinos.filter(
+          (dino) =>
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) >= Number(decade.slice(0, 4)) &&
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) <
+              Number(decade.slice(0, 4)) + 10
+        );
+      } else {
+        filteredDinos = dinosaurs.filter(
+          (dino) =>
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) >= Number(decade.slice(0, 4)) &&
+            Number(
+              dino.namedBy.split(" ").pop()?.split("(").pop()?.split(")")[0]
+            ) <
+              Number(decade.slice(0, 4)) + 10
+        );
+      }
+    }
+    if (!name && !foundIn && !diet && !length && !weight && !decade) {
       return dinosaurs;
     }
-    return filteredDinos;
+
+    if (filteredDinos.length) {
+      //save to db;
+      const confirmed = await saveSearchResults(currentURL);
+
+      if (confirmed) {
+        return filteredDinos;
+      }
+    }
+    return [];
   } catch (error) {
     console.log("Failed to fetch dinausors: ", error);
     return [];
   }
 };
+
+async function saveSearchResults(url: string) {
+  // seek userid;
+  try {
+    const session = await auth();
+
+    if (session?.user?.email) {
+      const userData = await db.user.findUnique({
+        where: {
+          email: session.user.email,
+        },
+      });
+
+      if (userData) {
+        const userId = userData.id;
+
+        // pack data for saving in db;
+        const searchItem = {
+          query: url,
+          userId,
+        };
+
+        // save data to db;
+        const confirmation = await db.searchHistory.create({
+          data: {
+            ...searchItem,
+          },
+        });
+
+        if (confirmation) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  } catch (error) {
+    console.log("Failed to save search to DB: ", error);
+    return false;
+  }
+}
 
 export const fetchDinoData = async (): Promise<DinoDataType[] | null> => {
   try {
@@ -341,4 +423,111 @@ export async function getDecadesFromData(dinosaurs: DinoDataType[]) {
     publicationYears.map((year) => year && Math.floor(year / 10))
   );
   return Array.from(uniqueDecades).sort() as number[];
+}
+
+export async function getUserSearchHistory(email: string) {
+  unstable_noStore();
+  try {
+    const result = await db.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!result?.id) {
+      return null;
+    }
+
+    const id = result.id;
+
+    const dbResult = await db.searchHistory.findMany({
+      where: {
+        userId: id,
+      },
+    });
+
+    if (dbResult) {
+      const uniqueSearchHistory = new Map();
+
+      dbResult.forEach((obj) => {
+        if (!uniqueSearchHistory.has(obj.query)) {
+          uniqueSearchHistory.set(obj.query, obj.query);
+        }
+      });
+
+      const uniqueArr: string[] = [];
+      uniqueSearchHistory.forEach((value) => {
+        uniqueArr.push(value);
+      });
+
+      if (uniqueArr.length) {
+        return uniqueArr;
+      } else return null;
+    } else return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteSearchHistory(reqData: {
+  user_email: string;
+  delete_all: boolean;
+  specified_history?: string;
+}) {
+  try {
+    if (reqData.delete_all) {
+      const result = await db.user.findUnique({
+        where: {
+          email: reqData.user_email,
+        },
+      });
+
+      if (!result) {
+        throw new Error(
+          `Failed to get user specified with email: ${reqData.user_email}`
+        );
+      }
+
+      const user_id = result.id;
+
+      const confirmation = await db.searchHistory.deleteMany({
+        where: {
+          userId: user_id,
+        },
+      });
+
+      if (confirmation.count) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (!reqData.delete_all && reqData.specified_history) {
+      const result = await db.user.findUnique({
+        where: {
+          email: reqData.user_email,
+        },
+      });
+
+      if (!result) {
+        throw new Error(
+          `Failed to get user specified with email: ${reqData.user_email}`
+        );
+      }
+
+      const user_id = result.id;
+
+      const confirmation = await db.searchHistory.deleteMany({
+        where: {
+          AND: [{ userId: user_id }, { query: reqData.specified_history }],
+        },
+      });
+
+      if (confirmation.count) {
+        return true;
+      } else return false;
+    }
+  } catch (error) {
+    console.log("Error Delete at search history: ", error);
+    throw error;
+  }
 }

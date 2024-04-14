@@ -62,10 +62,10 @@ export default function SignUpForm({
     const inputValue = event.currentTarget.value;
     if (passwordRef.current) {
       const passwordValue = passwordRef?.current.value;
-      if (passwordValue !== inputValue) {
-        setIsPasswordConfirmed(false);
-      } else {
+      if (passwordValue === inputValue) {
         setIsPasswordConfirmed(true);
+      } else {
+        setIsPasswordConfirmed(false);
       }
     }
   };
@@ -281,7 +281,7 @@ export default function SignUpForm({
             href={"/extras/about-us/terms-conditions"}
             className=" text-blue-500 underline underline-offset-1"
           >
-            terms and conditions
+            terms of service
           </Link>{" "}
           of this app <strong>digging-into-dinosaurs</strong>
         </span>
@@ -295,9 +295,12 @@ export default function SignUpForm({
           }}
           disabled={!isPasswordConfrimed}
           className={clsx(
-            "w-full bg-orange-300 hover:bg-orange-400 text-white font-bold rounded-lg p-3 my-2 transition-colors duration-300 ease-linear opacity-50 flex items-center justify-center",
+            "w-full bg-orange-300 hover:bg-orange-400 text-white font-bold rounded-lg p-3 my-2 transition-colors duration-300 ease-linear flex items-center justify-center",
             {
               " opacity-100": isPasswordConfrimed,
+              "opacity-50": !isPasswordConfrimed,
+              "bg-white border-2 border-orange-400 hover:bg-white":
+                attemptSignUp,
             }
           )}
         >

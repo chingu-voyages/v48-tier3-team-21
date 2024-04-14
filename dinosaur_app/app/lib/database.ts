@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "development") {
   globalThis.prisma = db;
 }
 
-type SearchHistoryInput = {
+export type SearchHistoryInput = {
   create?: Array<Prisma.SearchHistoryCreateWithoutUserInput>;
 };
 

@@ -1,25 +1,29 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms Of Use",
+};
+
 const TermsAndConditions = () => {
   return (
     <div className="max-w-4xl mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Terms and Conditions
-      </h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Terms Of Use</h1>
       <div className="terms-content">
         <p className="mb-4">
           <strong>1. Acceptance of Terms</strong>
           <br />
-          By accessing or using our app, you agree to be bound by these terms
-          and conditions and any additional terms incorporated by reference.
-          These terms and conditions apply to all users of the app, including
-          without limitation users who are browsers, vendors, customers,
-          merchants, and/ or contributors of content.
+          By accessing or using our app, you agree to be bound by these{" "}
+          <strong>Terms Of Use</strong> and any additional terms incorporated by
+          reference. These <strong>Terms Of Use</strong> apply to all users of
+          the app, including without limitation users who are browsers, vendors,
+          customers, merchants, and/ or contributors of content.
         </p>
         <p className="mb-4">
           <strong>2. Use of the App</strong>
           <br />
           You may use our app solely for your personal, non-commercial purposes.
           You agree not to use the app for any unlawful purpose or in any way
-          that violates these terms and conditions.
+          that violates these <strong>Terms Of Use</strong>.
         </p>
         <p className="mb-4">
           <strong>3. User Accounts</strong>
@@ -48,19 +52,19 @@ const TermsAndConditions = () => {
           out of or in connection with your use of the app.
         </p>
         <p className="mb-4">
-          <strong>6. Changes to Terms and Conditions</strong>
+          <strong>6. Changes to Terms Of Use</strong>
           <br />
-          We reserve the right to modify or replace these terms and conditions
-          at any time. If a revision is material, we will try to provide at
-          least 30 days&apos; notice prior to any new terms taking effect. What
-          constitutes a material change will be determined at our sole
-          discretion.
+          We reserve the right to modify or replace these{" "}
+          <strong>Terms Of Use</strong> at any time. If a revision is material,
+          we will try to provide at least 30 days&apos; notice prior to any new
+          terms taking effect. What constitutes a material change will be
+          determined at our sole discretion.
         </p>
         <p className="mb-4">
           <strong>7. Governing Law</strong>
           <br />
-          These terms and conditions shall be governed by and construed in
-          accordance with the laws of United States, without regard to its
+          These <strong>Terms Of Use</strong> shall be governed by and construed
+          in accordance with the laws of United States, without regard to its
           conflict of law provisions.
         </p>
         <p className="mb-4">

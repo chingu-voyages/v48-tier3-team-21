@@ -5,10 +5,13 @@ import { authConfig } from "./auth.config";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { db } from "@/app/lib/database";
+import { requestEmailConfirmation } from "./app/lib/action";
+import { unstable_noStore } from "next/cache";
 
 async function getUser(email: string): Promise<any> {
+  unstable_noStore();
   try {
-    const user = db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email: email,
       },
@@ -30,6 +33,7 @@ export const {
   providers: [
     Credentials({
       async authorize(credentials) {
+        unstable_noStore();
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
@@ -38,11 +42,21 @@ export const {
           const { email, password } = parsedCredentials.data;
 
           const user = await getUser(email);
-          if (!user) return null;
+
+          if (!user) {
+            console.log("user not registered!");
+            return null;
+          } else if (!user.emailVerified) {
+            await requestEmailConfirmation(String(user.email));
+
+            return null;
+          }
+
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (passwordsMatch) {
             const authenticatedUser = {
+              id: user.id,
               name: user.name,
               email: user.email,
               image: null,

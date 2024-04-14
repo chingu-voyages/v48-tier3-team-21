@@ -4,6 +4,7 @@ import githubIcon from "@/public/github-icon/github-mark/github-mark-white.svg";
 import Link from "next/link";
 import NewsItems from "./NewsItems";
 import { developers } from "@/app/lib/constants";
+import ImageWithFallback from "../../ImageWithFallback";
 
 const FooterSection = async () => {
   return (
@@ -46,13 +47,13 @@ const FooterSection = async () => {
                 className="w-full h-14 flex justify-between shrink-0 items-center transition-transform duration-500 ease-out hover:px-1"
                 key={developer.name}
               >
-                <Image
-                  src={developer.avatar}
+                <ImageWithFallback
+                  sourceURL={developer.avatar}
                   alt={`Image Icon of ${developer.name}`}
                   width={1350}
                   height={768}
                   loading="lazy"
-                  className=" w-10 h-10 rounded-full border border-white shrink-0"
+                  moreStyles="w-10 h-10 rounded-full border border-white"
                 />
 
                 <span className=" mx-3 text-start w-full text-sm flex flex-col justify-center">
@@ -140,8 +141,8 @@ const FooterSection = async () => {
               <Link href="/extras/privacy-policy" className="hover:underline">
                 Privacy Policy
               </Link>
-              <Link href="/extras/terms-conditions" className="hover:underline">
-                Terms & Conditions
+              <Link href="/extras/terms-of-use" className="hover:underline">
+                Terms of Use
               </Link>
               <span> &copy; {new Date().getFullYear()}</span>
             </div>

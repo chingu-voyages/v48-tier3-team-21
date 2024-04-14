@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    
+            * {
+                box-sizing: border-box;
+                margin: 0 auto;
+            }
+            body {
+                margin-top: 50px;
+                background-color: darkgray;
+                color: black;
+                padding: 0 auto;
+                max-width: 700px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4;
+            }
+      
+    </style>
+</head>
+<body>
+    <img src="../../../public/dino_icon.svg" alt="" style="width: 150px; height: 150px; border-radius: 20%;">
+
+    <h1>Digging Into Dinosaurs</h1>
+
+    <br />
+
+    <p>You are seeing this email because you are required to confirm your account creation by verifing your email address. To proceed click the link below: </p>
+    <br />
+    <a href="https://digging-into-dinosaurs.vercel.app" target="_blank" style="background-color: rgb(247, 184, 113); padding: 12px; border-radius: 20px; color: white; font-size: small; font-weight: bold;">Verify Email</a>
+    <br />
+
+    <h2>About Digging Into Dinosaurs App</h2>
+    <p>Dinosaurs first appeared between 247 and 240 million years ago. They ruled the Earth for about 175 million years until an extinction event 65.5 million years ago wiped out all of them, except for the avian dinosaurs. Scientists don't agree entierly on what happened, but the extinction likely was a double or triple whammy involving an asteroid impact, chocking chemicals from erupting volcanoes, climate change and possibly other factors. Utilizing data from public sources like Kaggle & Tableau, we've created an interactive website for all the fun facts we found in the data about dinosaurs! See where and when they lived, what they ate, and individual dinosaur facts! When you're done, be sure and visit the American Museum of Natural History for more fun dinosaur facts.</p>
+
+    <br />
+    <hr style="background-color: white; width: 100%;" />
+    <div style=" width: 100%; margin-top: 10px; display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <span style="font-weight: bold;">Digging Into Dinosaurs</span>
+        <a href="https://digging-into-dinosaurs.vercel.app/extras/privacy-policy" target="_blank">Privacy Policy</a>
+        <a href="https://digging-into-dinosaurs.vercel.app/extras/terms-of-use" target="_blank">Terms of Use</a>
+        <p style="display: flex; flex-direction: row; align-items: center;">
+            &copy;
+            <span id="current-year"></span>
+        </p>
+    </div>
+</body>
+<script>
+ const currentYear = new Date().getFullYear();
+ document.getElementById("current-year").innerText = currentYear;
+</script>
+</html>

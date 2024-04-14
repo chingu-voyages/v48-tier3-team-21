@@ -11,13 +11,13 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 const RemoveFilter = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { replace } = useRouter();
+  const router = useRouter();
   const handleClick = () => {
     const params = new URLSearchParams(searchParams);
     const keys = Array.from(params.keys());
     keys.forEach((key) => params.delete(key));
 
-    replace(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
   return (
     <TooltipProvider>

@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -38,25 +37,23 @@ const Filter = ({
     replace(`${pathname}?${params.toString()}`);
   };
   useEffect(() => {
-     ( async () => {
+    (async () => {
       const values = await filterOptions();
       setFilterValues(values);
-     })();
-    ;
+    })();
   }, []);
 
   return (
     <Select
       onValueChange={(value) => handleChange(value)}
-      defaultValue={searchParams.get(paramValue)?.toString()}
+      defaultValue={searchParams.get(paramValue)?.toString() || "all"}
     >
       <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>{placeholder}</SelectLabel>
-          <SelectItem value="all">all</SelectItem>
+          <SelectItem value="all">{placeholder}</SelectItem>
           {filterValues?.map((option) => (
             <SelectItem key={option} value={option.toString()}>
               {option}

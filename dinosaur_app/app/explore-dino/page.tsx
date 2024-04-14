@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DinoDataType } from "../lib/definitions";
 import Dinocard from "./ui/Dinocard";
 
-import { getAllDinousars, getDinoDietsforFilter, getDinoLengthsforFilter, getDinoWeightsforFilter } from "../lib/utils";
+import {
+  getAllDinousars,
+  getDinoDietsforFilter,
+  getDinoLengthsforFilter,
+  getDinoWeightsforFilter,
+} from "../lib/utils";
 
 import SearchBar from "./ui/SearchBar";
 import Filter from "./ui/Filter";
@@ -12,6 +17,7 @@ import Filter from "./ui/Filter";
 import RemoveFilter from "./ui/RemoveFilter";
 import { getDinoLocationsforFilter } from "../lib/utils";
 import PageLoading from "../ui/PageLoading";
+import { AppContext } from "../ui/AppContext";
 
 const ExploreDino = ({
   searchParams,
@@ -22,28 +28,36 @@ const ExploreDino = ({
     diet: string;
     length: string;
     weight: string;
+    decade?: string;
   };
 }) => {
   const [dinausors, setDinousars] = useState<DinoDataType[]>([]);
   const [loading, setLoading] = useState(false);
-  const name = searchParams?.name || "";
-  const foundIn = searchParams?.foundIn || "";
-  const diet = searchParams?.diet || "";
-  const length = searchParams?.length || "";
-  const weight = searchParams?.weight || "";
+  const name = searchParams?.name ?? "";
+  const foundIn = searchParams?.foundIn ?? "";
+  const diet = searchParams?.diet ?? "";
+  const length = searchParams?.length ?? "";
+  const weight = searchParams?.weight ?? "";
+  const decade = searchParams?.decade ?? "";
+  const { setRefreshSearchHistoryView } = useContext(AppContext);
 
   useEffect(() => {
     const fetchDinosaurs = async () => {
       setLoading(true);
       try {
+        const currentURL = window.location.href;
         const dinausors = await getAllDinousars({
           name,
           foundIn,
           diet,
           length,
           weight,
+          decade,
+          currentURL,
         });
+
         setDinousars(dinausors);
+        setRefreshSearchHistoryView(true);
       } catch (error) {
         console.log("Failed to fetch dinausors: ", error);
       } finally {
@@ -51,18 +65,20 @@ const ExploreDino = ({
       }
     };
     fetchDinosaurs();
-  }, [name, foundIn, diet, length, weight]);
+  }, [name, foundIn, diet, length, weight, decade]);
 
   return (
     <main className="flex flex-col  justify-center items-center pt-4 gap-y-8">
       <div className="flex flex-col items-center justify-center lg:flex-row gap-x-4">
         <SearchBar />
-        <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 md:mt-0">
-          {<Filter
-            placeholder="Countries"
-            filterOptions={getDinoLocationsforFilter}
-            paramValue="foundIn"
-          />}
+        <div className="grid grid-cols-2 gap-y-2 mt-4  md:flex gap-x-2 lg:mt-0 ">
+          {
+            <Filter
+              placeholder="Countries"
+              filterOptions={getDinoLocationsforFilter}
+              paramValue="foundIn"
+            />
+          }
           <Filter
             placeholder="Diet"
             filterOptions={getDinoDietsforFilter}
@@ -79,7 +95,21 @@ const ExploreDino = ({
             paramValue="weight"
           />
         </div>
-        <RemoveFilter/>
+        <div className="max-lg:mt-2 max-lg:self-start max-lg:pl-2">
+          <RemoveFilter />
+        </div>
+      </div>
+      <div className="text-orange-600 text-2xl lg:self-start lg:pl-[6rem]">
+        {loading ? (
+          "Discovering..."
+        ) : (
+          <>
+            {" "}
+            Discovered
+            <span className="font-extrabold mx-2">{dinausors?.length}</span>
+            Dinosaurs
+          </>
+        )}
       </div>
       <div
         className={

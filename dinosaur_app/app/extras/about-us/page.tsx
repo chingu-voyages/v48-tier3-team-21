@@ -5,13 +5,18 @@ import Image from "next/image";
 import { Suspense } from "react";
 import githubIcon from "@/public/github-icon/github-mark/github-mark.svg";
 import websiteIcon from "@/public/web-icon.png";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us",
+};
 
 const AboutUsPage = () => {
   return (
     <main className="w-full min-h-[50vh] flex flex-col p-8 bg-white text-black">
       <Suspense fallback={<PageLoading />}>
         <h1 className="w-full text-start font-extrabold">About Us:</h1>
-        <h2 className=" text-center text-8xl max-sm:text-3xl max-md:text-5xl max-lg:text-6xl font-cabinSketch">
+        <h2 className=" text-center text-8xl max-sm:text-3xl max-md:text-5xl max-lg:text-6xl font-cabinSketch bg-gradient-to-br from-orange-900 via-orange-700 to-orange-500 bg-clip-text  text-transparent">
           Meet The Team Behind Development of <br />
           <strong>Digging Into Dinosaurs</strong>
         </h2>

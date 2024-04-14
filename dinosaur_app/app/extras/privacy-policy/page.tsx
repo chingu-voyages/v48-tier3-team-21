@@ -1,4 +1,9 @@
 import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+};
 
 const PrivacyPolicy = () => {
   return (
@@ -19,8 +24,8 @@ const PrivacyPolicy = () => {
           not limited to:
           <ul className=" list-inside list-none">
             <li className=" list-item">
-              - Personal information such as name, email address, and contact
-              details provided during account registration.
+              - Personal information such as name, email address, and account
+              password provided during account registration.
             </li>
             <li className=" list-item">
               {" "}
@@ -78,7 +83,8 @@ const PrivacyPolicy = () => {
             className=" text-blue-600 underline underline-offset-2 font-bold"
           >
             Chingu.io
-          </a>
+          </a>{" "}
+          and request team 21 of voyage 48
         </p>
       </div>
     </div>

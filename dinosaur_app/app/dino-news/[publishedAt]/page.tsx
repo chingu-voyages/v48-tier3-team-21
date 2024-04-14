@@ -4,7 +4,12 @@ import { Suspense } from "react";
 import BackButton from "../ui/BackButton";
 import clsx from "clsx";
 import PageLoading from "@/app/ui/PageLoading";
-import fallbackImage from "@/public/dino_icon.svg";
+
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Get Informed | Dino News",
+};
 
 interface DinoNewsProp {
   params: {

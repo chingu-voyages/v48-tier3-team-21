@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import googleIcon from "@/public/google-icon.svg";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { authenticate } from "@/app/lib/action";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -130,6 +130,7 @@ export default function LoginForm({
             <hr className="w-1/2" />
           </span>
           <button
+            type="button"
             disabled={isLogginWithGoogle}
             onClick={() => {
               setIsLogginWithGoogle(true);
@@ -203,13 +204,19 @@ export default function LoginForm({
         <div className="flex flex-row items-center gap-4">
           <button
             type="button"
+            disabled={isLoginWithEmail}
             onClick={() => {
               setRequestPassword(false);
               setTimeout(() => {
                 setEditEmail(true);
               }, 600);
             }}
-            className="w-1/2 bg-orange-300 hover:bg-orange-400 text-white font-bold rounded-lg p-3 transition-colors duration-300 ease-linear"
+            className={clsx(
+              "w-1/2 bg-orange-300 hover:bg-orange-400 text-white font-bold rounded-lg p-3 transition-colors duration-300 ease-linear",
+              {
+                " opacity-50": isLoginWithEmail,
+              }
+            )}
           >
             Cancel
           </button>
